@@ -25,7 +25,13 @@ class WPMLAutoTranslator {
 	 * @static
 	 */
 	public static function plugin_activation() {
-		
+		if (!is_plugin_active( 'wpml-translation-management/plugin.php' )) {
+            $message .= __( 'WPML.org is not active. Please, install it before.' );
+            echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+        } else {
+            $message .= __( 'WPML Auto Translator is now active.' );
+            echo '<div class="notice notice-success"><p>' . esc_html( $message ) . '</p></div>';
+        }
 	}
 
 	/**
