@@ -4,6 +4,7 @@ Tags: wpml, translation, google, automatic, elementor
 Requires at least: 4.9
 Requires PHP: 5.6
 License: GPL
+Domain: wpmlat
 
 Auto translate your web using google translator and WPML.org plugin.
 
