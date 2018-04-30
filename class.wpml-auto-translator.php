@@ -1,14 +1,20 @@
 <?php
+use \racs\wpmlat\TranslationService;
 
 class WPMLAutoTranslator {
 
     private static $initiated = false;
+    
+    /**
+     *
+     * @var TranslationService\TranslationService 
+     */
     private static $translationService = null;
 
     public static function init() {
         if (!self::$initiated) {
             self::init_hooks();
-            $this->translationService = new
+            self::init_service();
         }
     }
 
@@ -19,8 +25,28 @@ class WPMLAutoTranslator {
         self::$initiated = true;
 
         add_action('wpmlat_translate_item', array('WPMLAutoTranslator', 'translateItem'));
-//        add_action('wp_insert_comment', array('WPMLAutoTranslator', 'auto_check_update_meta'), 10, 2);
 //        add_filter('preprocess_comment', array('WPMLAutoTranslator', 'auto_check_comment'), 1);
+    }
+    
+    /**
+     * Init the translation service
+     * @return bool If file/class not exist it will return false
+     */
+    private static function init_service() {
+        $service = 'GoogleTranslateFree';
+        
+        $translationServicePath = WPMLAT__PLUGIN_DIR . 'TranslationService/'.$service.'.php';
+        if (is_file($translationServicePath)) {
+            include_once $translationServicePath;
+            $service = 'TranslationService\\'.$service;
+            echo $service;
+                self::$translationService = new $service();
+            if (class_exists($service)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -65,7 +91,6 @@ class WPMLAutoTranslator {
             throw new Exception(__('No element_id specified to auto translate'));
         }
         
-        
         $tm = new TranslationManagement();
         $meta = $tm->get_element_translation(63, 'en');
         $res = $tm->get_translation_job($meta->rid);
@@ -82,14 +107,16 @@ class WPMLAutoTranslator {
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
                 $sourceText = base64_decode($element->field_data);
-                $newText = strrev($sourceText); // AQUI LA TRADUCCION
+                $newText = self::doTranslation($sourceText, $meta->languaje_code, $meta->source_languaje_code); // AQUI LA TRADUCCION
                 
-                // wpml-translation-management\inc\ajax.php
-                $toSave['fields'][$element->field_type] = array(
-                    'data' => $newText,
-                    'tid' => $element->tid,
-                    'format' => 'base64',
-                );
+                if ($newText !== null) {
+                    // wpml-translation-management\inc\ajax.php
+                    $toSave['fields'][$element->field_type] = array(
+                        'data' => $newText,
+                        'tid' => $element->tid,
+                        'format' => 'base64',
+                    );
+                }
             }
         }
 
@@ -103,11 +130,14 @@ class WPMLAutoTranslator {
      * @param string $text Text to translate
      * @param string $destLang Language to translate
      * @param string $sourceLang Source language (optional)
-     * @return string
+     * @return string|null Return null if no TranslationService are loaded
      */
     public static function doTranslation($text, $destLang, $sourceLang = null) {
-        
-        return "";
+        if (!self::$translationService) return null;
+        echo 'Translating: ' ,$text;
+        print_r(self::$translationService);
+        echo '<br />';
+        return self::$translationService->translate($text, $sourceLang, $destLang);
     }
 
 }

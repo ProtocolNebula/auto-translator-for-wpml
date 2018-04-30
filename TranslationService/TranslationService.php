@@ -1,5 +1,5 @@
 <?php
-namespace \racs\wpmlat\translationService;
+namespace racs\wpmlat\TranslationService;
 
 /**
  * This interface defines how must be all TranslationService.
@@ -13,7 +13,7 @@ interface TranslationService {
      */
     public function __constructor();
 
-        /**
+    /**
      * Make a translation with the service
      * @param string $text Text to translate
      * @param string $sourceLanguage Original Language
@@ -21,5 +21,17 @@ interface TranslationService {
      * @return string Text translation
      */
     public function translate($text, $sourceLanguage, $destinationLanguage);
+    
+    /**
+     * FOR FUTURE IMPLEMENTS:
+     * This function show a form with all required data for this specific TranslationService (if is necessary)
+     */
+    public function globalConfiguration();
+    
+    /**
+     * FOR FUTURE IMPLEMENTS:
+     * This function save data from globalConfiguration() with all required data for this specific TranslationService (if is necessary)
+     */
+    public function saveGlobalConfiguration();
     
 }
