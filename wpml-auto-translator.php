@@ -18,6 +18,10 @@ define ('WPMLAT__PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 register_activation_hook( __FILE__, array( 'WPMLAutoTranslator', 'plugin_activation' ) );
 register_deactivation_hook( __FILE__, array( 'WPMLAutoTranslator', 'plugin_deactivation' ) );
 
+// Interface to Translations Service
+require_once( WPMLAT__PLUGIN_DIR . 'TranslationService/TranslationService.php' );
+
+// Class
 require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator.php' );
 
 add_action( 'init', array( 'WPMLAutoTranslator', 'init' ) );
