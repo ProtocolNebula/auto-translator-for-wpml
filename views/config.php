@@ -10,4 +10,3 @@ if (!class_exists('TranslationManagement')) {
     do_action('wpmlat_translate_item', array('element_id'=>63));
     echo 'Translated';
 }
-

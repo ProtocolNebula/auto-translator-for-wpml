@@ -1,6 +1,4 @@
 <?php
-use \racs\wpmlat\TranslationService;
-
 class WPMLAutoTranslator {
 
     private static $initiated = false;
@@ -38,10 +36,10 @@ class WPMLAutoTranslator {
         $translationServicePath = WPMLAT__PLUGIN_DIR . 'TranslationService/'.$service.'.php';
         if (is_file($translationServicePath)) {
             include_once $translationServicePath;
-            $service = 'TranslationService\\'.$service;
-            echo $service;
-                self::$translationService = new $service();
+            $service = 'racs\\wpmlat\\TranslationService\\'.$service;
             if (class_exists($service)) {
+                self::$translationService = new $service();
+                self::$translationService->init();
                 return true;
             }
         }
@@ -91,25 +89,36 @@ class WPMLAutoTranslator {
             throw new Exception(__('No element_id specified to auto translate'));
         }
         
+        $langDest = 'en';
+        
         $tm = new TranslationManagement();
-        $meta = $tm->get_element_translation(63, 'en');
-        $res = $tm->get_translation_job($meta->rid);
+        $jobID = $tm->get_translation_job_id($args['element_id'], $langDest);
+        $meta = $tm->get_element_translation($args['element_id'], $langDest);
+        $res = $tm->get_translation_job($jobID);
 
         $toSave = array(
             'job_type' => $meta->element_type,
-            'job_id' => $meta->rid,
-            'target' => $meta->languaje_code,
-            'target_lang' => $meta->languaje_code,
+            'job_id' => $jobID,
+            'target' => $meta->language_code,
+            'target_lang' => $meta->language_code,
             'source_lang' => $meta->source_language_code,
             'fields' => array(),
         );
 
+        $sourceLang = $meta->source_language_code;
+        $destLang = $meta->language_code;
+        
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
                 $sourceText = base64_decode($element->field_data);
-                $newText = self::doTranslation($sourceText, $meta->languaje_code, $meta->source_languaje_code); // AQUI LA TRADUCCION
+                $newText = self::doTranslation($sourceText, $sourceLang, $destLang);
                 
                 if ($newText !== null) {
+                    // Convert the first letter to mayus if necessary
+                    if (ctype_upper($sourceText[0]) and !ctype_upper($newText[0])) {
+                        $newText[0] = strtoupper($newText[0]);
+                    }
+                    
                     // wpml-translation-management\inc\ajax.php
                     $toSave['fields'][$element->field_type] = array(
                         'data' => $newText,
@@ -120,7 +129,10 @@ class WPMLAutoTranslator {
             }
         }
 
-        $ret = $tm->save_translation($toSave);
+        if (!empty($toSave)) {
+            // wpml-translation-management\inc\ajax.php
+            $ret = $tm->save_translation($toSave);
+        }
         
         return true;
     }
@@ -128,16 +140,19 @@ class WPMLAutoTranslator {
     /**
      * Make a translation using the current TranslationService
      * @param string $text Text to translate
-     * @param string $destLang Language to translate
      * @param string $sourceLang Source language (optional)
+     * @param string $destLang Language to translate
      * @return string|null Return null if no TranslationService are loaded
      */
-    public static function doTranslation($text, $destLang, $sourceLang = null) {
-        if (!self::$translationService) return null;
-        echo 'Translating: ' ,$text;
-        print_r(self::$translationService);
-        echo '<br />';
-        return self::$translationService->translate($text, $sourceLang, $destLang);
+    public static function doTranslation($text, $sourceLang, $destLang) {
+        try {
+            if (self::$translationService) {
+                return self::$translationService->translate($text, $sourceLang, $destLang);
+            }
+        } catch (Exception $ex) {
+            echo '<div class="notice notice-success"><p>' . esc_html($ex->getMessage()) . '</p></div>';
+        }
+        return null;
     }
 
 }

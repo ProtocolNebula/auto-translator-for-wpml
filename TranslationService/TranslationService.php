@@ -11,10 +11,12 @@ interface TranslationService {
      * This function may be load (if is necessary) the original class
      * to use (if there any)
      */
-    public function __constructor();
+    public function init();
 
     /**
      * Make a translation with the service
+     * NOTE: Depending of Translation Service, $sourceLanguage will be autodetected 
+     * even if specified (ex: google)
      * @param string $text Text to translate
      * @param string $sourceLanguage Original Language
      * @param string $destinationLanguage New Language

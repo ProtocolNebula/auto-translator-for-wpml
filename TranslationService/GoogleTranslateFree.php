@@ -9,13 +9,14 @@ class GoogleTranslateFree implements TranslationService {
     
     private static $googleService = null;
     
-    public function __constructor() {
-        if (!self::$googleService) {
+    public function init() {
+        if (self::$googleService === null) {
             self::$googleService = new GoogleTranslate();
         }
     }
     
     public function translate($text, $sourceLanguage, $destinationLanguage) {
+        usleep(6000);
         return self::$googleService->translate($sourceLanguage, $destinationLanguage, $text);
     }
 
