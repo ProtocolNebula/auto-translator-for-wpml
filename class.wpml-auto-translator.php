@@ -78,6 +78,10 @@ class WPMLAutoTranslator {
 
         include( $file );
     }
+    
+    public function getItemsToTranslate($page) {
+        
+    }
 
     /**
      * Make an item translation with plugin settings
@@ -96,6 +100,13 @@ class WPMLAutoTranslator {
         
         $tm = new TranslationManagement();
         $jobID = $tm->get_translation_job_id($args['element_id'], $args['lang']);
+        
+        if (!$jobID) {
+            $res = $tm->create_translation_package($args['element_id']);
+            $wpml_translation_job_factory = wpml_tm_load_job_factory();
+            $jobID = $wpml_translation_job_factory->create_local_post_job($args['element_id'], $args['lang']);
+        }
+        
         $meta = $tm->get_element_translation($args['element_id'], $args['lang']);
         $res = $tm->get_translation_job($jobID);
 
@@ -110,7 +121,7 @@ class WPMLAutoTranslator {
 
         $sourceLang = $meta->source_language_code;
         $destLang = $meta->language_code;
-        
+
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
                 $sourceText = base64_decode($element->field_data);
