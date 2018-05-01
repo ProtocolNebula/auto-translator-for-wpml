@@ -82,18 +82,21 @@ class WPMLAutoTranslator {
     /**
      * Make an item translation with plugin settings
      * @param array $args
+     *      - element_id: Post/Page/Element ID
+     *      - lang: Destination language
      * @throws Exception If data is missing, it will throw an exception
      */
     public static function translateItem($args = array()) {
         if (!isset($args['element_id'])) {
             throw new Exception(__('No element_id specified to auto translate'));
         }
-        
-        $langDest = 'en';
+        if (!isset($args['lang'])) {
+            throw new Exception(__('No destination lang specified to auto translate'));
+        }
         
         $tm = new TranslationManagement();
-        $jobID = $tm->get_translation_job_id($args['element_id'], $langDest);
-        $meta = $tm->get_element_translation($args['element_id'], $langDest);
+        $jobID = $tm->get_translation_job_id($args['element_id'], $args['lang']);
+        $meta = $tm->get_element_translation($args['element_id'], $args['lang']);
         $res = $tm->get_translation_job($jobID);
 
         $toSave = array(
