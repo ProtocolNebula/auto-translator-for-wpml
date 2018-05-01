@@ -7,6 +7,6 @@ if (!class_exists('TranslationManagement')) {
     </div>
 <?php
 } else {
-    do_action('wpmlat_translate_item', array('element_id'=>63));
+    do_action('wpmlat_translate_item', array('element_id'=>15, 'lang'=>'ca'));
     echo 'Translated';
 }
