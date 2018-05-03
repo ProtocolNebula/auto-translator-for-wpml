@@ -22,7 +22,9 @@ class WPMLAutoTranslator {
     private static function init_hooks() {
         self::$initiated = true;
 
-        add_action('wpmlat_translate_item', array('WPMLAutoTranslator', 'translateItem'));
+        if (current_user_can('edit_others_posts')) {
+            add_action('wpmlat_translate_item', array('WPMLAutoTranslator', 'translateItem'));
+        }
 //        add_filter('preprocess_comment', array('WPMLAutoTranslator', 'auto_check_comment'), 1);
     }
     
