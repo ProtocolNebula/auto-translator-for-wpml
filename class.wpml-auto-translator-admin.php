@@ -20,15 +20,31 @@ class WPMLAutoTranslatorAdmin {
     public static function init_hooks() {
         self::$initiated = true;
         
-        // include all admin pages
-        foreach ( glob( WPMLAT__PLUGIN_DIR . "includes/admin/*.php" ) as $file ) {
-            include_once $file;
-        }
+        self::include_page_class();
 
         add_action('admin_init', array('WPMLAutoTranslatorAdmin', 'admin_init'));
         add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 5);
 
 //        add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__FILE__) . 'akismet.php'), array('Akismet_Admin', 'admin_plugin_settings_link'));
+    }
+    
+    /**
+     * Include the current page admin class required to show (if any)
+     */
+    public static function include_page_class() {
+        // include all admin pages
+        //foreach ( glob( WPMLAT__PLUGIN_DIR . "includes/admin/*.php" ) as $file ) {
+        //    include_once $file;
+        //}
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $key = 'wpmlat_';
+            $wpmlatPos = strpos($page, $key);
+            if (false !== $wpmlatPos) {
+                $page = sanitize_text_field(substr($page, strlen($key)));
+                require_once WPMLAT__PLUGIN_DIR . "includes/admin/{$page}-page.php";
+            }
+        }
     }
 
     /**
@@ -47,7 +63,7 @@ class WPMLAutoTranslatorAdmin {
             __('WPML Auto Translation', 'wpmlat'), 
             __('WMPL Auto Translator', 'wpmlat'), 
             'manage_options', 
-            'wpmlat_options', 
+            'wpmlat_config', 
             array( 'WPMLAutoTranslatorAdminConfigPage', 'show' ) 
         );
     }

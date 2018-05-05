@@ -3,22 +3,17 @@
  * Interface to create new Page in wp-admin
  */
 interface WPMLAutoTranslatorAdminPageI {
-    /**
-     * This function must create all hooks for the current page
-     * After or before that, must call parent::init_hooks();
-     * 
+    
+    /*
+     * Initializers.
+     * This functions will be executed in the same as declared in this file
+     * If a function is not necessary, leave it empty but declared
      */
-    public static function init_hooks();
     
     /**
-     * Show the configuration related page.
-     * 
-     * @example 
-     *  if (current_user_can('manage_options')) {
-     *       WPMLAutoTranslator::view( 'config', compact( 'test' ) );
-     *   }
+     * This function must create all hooks for the current page
      */
-    public static function show_page();
+    public function init_hooks();
     
     /**
      * Instantiate elements for admin page, it include (if necessary):
@@ -26,6 +21,16 @@ interface WPMLAutoTranslatorAdminPageI {
      * 
      * All callbacks (methods) must be from the new class (all public static)
      */
-    public static function settings_init();
+    public function init_settings();
+    
+    /**
+     * Show the configuration related page.
+     * 
+     * @example 
+     *  if (current_user_can('manage_options')) {
+     *       WPMLAutoTranslator::view( 'config', compact( 'var1' ) );
+     *   }
+     */
+    public function show_page();
 
 }

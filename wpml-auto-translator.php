@@ -27,8 +27,8 @@ require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator.php' );
 add_action( 'init', array( 'WPMLAutoTranslator', 'init' ) );
 
 if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-    // Interface to admin page
-    require_once( WPMLAT__PLUGIN_DIR . 'includes/pageBase.php' );
+    // Abstract class for config pages
+    require_once( WPMLAT__PLUGIN_DIR . 'includes/page-base.php' );
 
 	require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator-admin.php' );
 	add_action( 'init', array( 'WPMLAutoTranslatorAdmin', 'init' ) );
