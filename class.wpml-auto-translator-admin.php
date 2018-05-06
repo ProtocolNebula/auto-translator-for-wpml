@@ -33,18 +33,19 @@ class WPMLAutoTranslatorAdmin {
      */
     public static function include_page_class() {
         // include all admin pages
-        //foreach ( glob( WPMLAT__PLUGIN_DIR . "includes/admin/*.php" ) as $file ) {
-        //    include_once $file;
-        //}
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-            $key = 'wpmlat_';
-            $wpmlatPos = strpos($page, $key);
-            if (false !== $wpmlatPos) {
-                $page = sanitize_text_field(substr($page, strlen($key)));
-                require_once WPMLAT__PLUGIN_DIR . "includes/admin/{$page}-page.php";
-            }
+        foreach ( glob( WPMLAT__PLUGIN_DIR . "includes/admin/*.php" ) as $file ) {
+            include_once $file;
         }
+//        if (isset($_GET['page'])) {
+//            $page = $_GET['page'];
+//            $key = 'wpmlat_';
+//            $wpmlatPos = strpos($page, $key);
+//            if (false !== $wpmlatPos) {
+//                $page = sanitize_text_field(substr($page, strlen($key)));
+//                require_once WPMLAT__PLUGIN_DIR . "includes/admin/{$page}-page.php";
+//            }
+//        }
+        add_action( 'admin_init', [ 'WPMLAutoTranslatorAdminConfigPage', 'initialize' ] );
     }
 
     /**

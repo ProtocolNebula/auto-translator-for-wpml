@@ -3,7 +3,7 @@
 Plugin Name:  WPML Auto Translator (WPMLAT)
 Description:  A plugin to autotranslate with google and WPML
 Version:      1.0
-Author:       ProtocolNebula
+Author:       Ruben Arroyo Ceruelo
 Author URI:   https://racs.es/
 License:      GPL2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -30,6 +30,6 @@ if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
     // Abstract class for config pages
     require_once( WPMLAT__PLUGIN_DIR . 'includes/page-base.php' );
 
-	require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator-admin.php' );
-	add_action( 'init', array( 'WPMLAutoTranslatorAdmin', 'init' ) );
+    require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator-admin.php' );
+    add_action( 'init', array( 'WPMLAutoTranslatorAdmin', 'init' ) );
 }

@@ -12,7 +12,7 @@ if (!class_exists('TranslationManagement')) {
 // wordpress will add the "settings-updated" $_GET parameter to the url
 if (isset($_GET['settings-updated'])) {
     // add settings saved message with the class of "updated"
-    add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'wporg'), 'updated');
+    // add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'wporg'), 'updated');
 }
 
 // show error/update messages
@@ -20,7 +20,7 @@ settings_errors('wporg_messages');
 ?>
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-    <form method="post">
+    <form method="post" action="options.php">
         <?php        
         // output security fields for the registered setting "wporg"
         settings_fields('wpmlat');
