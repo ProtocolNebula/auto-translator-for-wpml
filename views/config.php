@@ -20,7 +20,7 @@ settings_errors('wporg_messages');
 ?>
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-    <form action="options.php" method="post">
+    <form method="post">
         <?php        
         // output security fields for the registered setting "wporg"
         settings_fields('wpmlat');
@@ -30,7 +30,7 @@ settings_errors('wporg_messages');
         do_settings_sections('wpmlat');
         
         // output save settings button
-        submit_button('Save Settings');
+        submit_button(__('Save Settings', 'wpmlat'));
         ?>
     </form>
 </div>

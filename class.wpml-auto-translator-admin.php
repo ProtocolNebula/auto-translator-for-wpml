@@ -25,7 +25,7 @@ class WPMLAutoTranslatorAdmin {
         add_action('admin_init', array('WPMLAutoTranslatorAdmin', 'admin_init'));
         add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 5);
 
-//        add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__FILE__) . 'akismet.php'), array('Akismet_Admin', 'admin_plugin_settings_link'));
+        //add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__FILE__) . 'akismet.php'), array('Akismet_Admin', 'admin_plugin_settings_link'));
     }
     
     /**
@@ -52,7 +52,7 @@ class WPMLAutoTranslatorAdmin {
      */
     public static function admin_init() {
         load_plugin_textdomain('wpmalt');
-//        add_meta_box('akismet-status', __('Comment History', 'akismet'), array('Akismet_Admin', 'comment_status_meta_box'), 'comment', 'normal');
+        // add_meta_box('akismet-status', __('Comment History', 'akismet'), array('Akismet_Admin', 'comment_status_meta_box'), 'comment', 'normal');
     }
     
     /**
