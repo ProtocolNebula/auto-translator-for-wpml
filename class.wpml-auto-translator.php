@@ -70,6 +70,29 @@ class WPMLAutoTranslator {
     public static function plugin_deactivation() {
         
     }
+    
+    /**
+     * Return all active languages (wpml_active_languages)
+     * @return array
+     */
+    public static function get_active_languages() {
+        return apply_filters( 'wpml_active_languages', null, array('orderby'=>'code', 'order'=>'asc'));
+    }
+    
+    /**
+     * Return an array with only keys and language names
+     * @return array (id=>Language text)
+     */
+    public static function get_active_languages_short() {
+        $langs = self::get_active_languages();
+        $return = array();
+        
+        foreach ($langs as $k=>$v) {
+            $return[$v['id']] = $v['default_locale'] . ' - ' . $v['native_name'];
+        }
+        
+        return $return;
+    }
 
     public static function view($name, array $args = array()) {
         load_plugin_textdomain('wmplat');
