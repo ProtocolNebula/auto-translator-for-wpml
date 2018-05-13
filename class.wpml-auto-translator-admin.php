@@ -23,7 +23,7 @@ class WPMLAutoTranslatorAdmin {
         self::include_page_class();
 
         add_action('admin_init', array('WPMLAutoTranslatorAdmin', 'admin_init'));
-        add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 5);
+        add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 20 );
 
         //add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__FILE__) . 'akismet.php'), array('Akismet_Admin', 'admin_plugin_settings_link'));
     }
@@ -43,9 +43,10 @@ class WPMLAutoTranslatorAdmin {
 //            if (false !== $wpmlatPos) {
 //                $page = sanitize_text_field(substr($page, strlen($key)));
 //                require_once WPMLAT__PLUGIN_DIR . "includes/admin/{$page}-page.php";
+//                
 //            }
 //        }
-        add_action( 'admin_init', [ 'WPMLAutoTranslatorAdminConfigPage', 'initialize' ] );
+//        add_action( 'admin_init', [ 'WPMLAutoTranslatorAdminConfigPage', 'initialize' ] );
     }
 
     /**
@@ -60,12 +61,22 @@ class WPMLAutoTranslatorAdmin {
      * Add menu in admin sidebar
      */
     public static function admin_menu() {
-        $hook = add_options_page( 
+        add_options_page( 
             __('WPML Auto Translation', 'wpmlat'), 
             __('WMPL Auto Translator', 'wpmlat'), 
             'manage_options', 
             'wpmlat_config', 
             array( 'WPMLAutoTranslatorAdminConfigPage', 'show' ) 
+        );
+        
+        $main_page = apply_filters( 'icl_menu_main_page', WPML_PLUGIN_FOLDER . '/menu/languages.php' );
+        add_submenu_page( 
+            $main_page, 
+            __( 'WPML Auto Translation', 'wpmlat' ), 
+            __( 'Do auto translation', 'wmplat' ), 
+            'manage_options', 
+            'wpmlat_execution', 
+            array( 'WPMLAutoTranslatorAdminExecutionPage', 'show' ) 
         );
     }
 

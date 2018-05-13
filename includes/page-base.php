@@ -2,7 +2,7 @@
 require_once( WPMLAT__PLUGIN_DIR . 'includes/pageI.php' );
 
 abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdminPageI {
-    private static $initiated = false;
+    public static $initiated = false;
     
     /**
      *
@@ -27,15 +27,14 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
      * @return WPMLAutoTranslatorAdminPageI Instance of page
      */
     public static function initialize() {
-        if (!self::$initiated) {
-            self::$initiated = true;
-            $className = get_called_class();
-            self::$instance = new $className;
-            self::$instance->init_hooks();
-            self::$instance->init_settings();
+        $className = get_called_class();
+        $instance = new $className;
+        if (!$instance->initiated) {
+            $instance->initiated = true;
+            $instance->init_hooks();
+            $instance->init_settings();
         }
-        
-        return self::$instance;
+        return $instance;
     }
     
     
