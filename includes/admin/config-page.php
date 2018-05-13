@@ -16,26 +16,14 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
             'wpmlat_setting_section', __('WPMLAT Setting'), null, 'wpmlat'
         );
 
-        $this->add_setting('wpmlat_max_translations_step', __('Max translations for every refresh', 'wpmlat'), 'intval');
-    }
-    
-    public function add_setting($name, $text, $sanitize_callback = '', $section = 'wpmlat_setting_section', $type = 'Input') {
         $this->load_options_data();
-        
-        // register a new setting for "reading" page
-        register_setting('wpmlat', $name, $sanitize_callback);
-        
-        // register a new field in the section
-        add_settings_field(
-            $name, $text, 
-            array('WPMLAutoTranslatorAdminPageBase', 'showInput'), 
-            'wpmlat', $section, array('name'=>$name)
-        );
-        
+        $this->add_setting('wpmlat_max_translations_step', __('Max translations for every refresh', 'wpmlat'), 'intval');
+        $this->add_setting_select('wpmlat_languages', $this->elements['languages'], __('Translate to (only active languages)', 'wpmlat'), true);  
     }
 
     public function show_page() {
         if (current_user_can('manage_options')) {
+            // load config.php view
             WPMLAutoTranslator::view('config', compact('test'));
         }
     }

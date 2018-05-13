@@ -1,4 +1,8 @@
 <?php
+/**
+ * Generic configuration page
+ * Load this page on all configuration page if you don't need other custom view
+ */
 if (!class_exists('TranslationManagement')) {
     ?>
     <div class='error'>
