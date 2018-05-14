@@ -1,6 +1,8 @@
 <?php
 /**
  * Interface to create new Page in wp-admin
+ * All page classes must be named "WPMLAutoTranslatorAdmin{$PageCamelCase}Page" and
+ * filename must be "{$PageCamelCase}.php"
  */
 interface WPMLAutoTranslatorAdminPageI {
     
