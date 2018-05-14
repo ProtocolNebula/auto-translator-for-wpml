@@ -1,14 +1,13 @@
 <?php
-require_once( WPMLAT__PLUGIN_DIR . 'includes/pageI.php' );
+require_once( WPMLAT__PLUGIN_DIR . 'pages/pageI.php' );
 
 abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdminPageI {
-    public static $initiated = false;
-    
     /**
-     *
-     * @var WPMLAutoTranslatorAdminPageI
+     * Contain a list with all page instances
+     * This is required because static vars can't be modified into childs (php things)
+     * @var array<WPMLAutoTranslatorAdminPageI>
      */
-    private static $instance;
+    private static $instances;
     
     /**
      * Init page items and show it using extended class
@@ -28,15 +27,16 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
      */
     public static function initialize() {
         $className = get_called_class();
-        $instance = new $className;
-        if (!$instance->initiated) {
-            $instance->initiated = true;
+
+
+        if (!isset(self::$instances[$className])) {
+            $instance = new $className;
             $instance->init_hooks();
             $instance->init_page();
+            self::$instances[$className] = $instance;
         }
-        return $instance;
+        return self::$instances[$className];
     }
-    
     
     /*
      * Generic inputs

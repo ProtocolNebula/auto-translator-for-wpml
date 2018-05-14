@@ -1,6 +1,8 @@
 <?php
 /**
  * Interface to create new Page in wp-admin
+ * All page classes must be named "WPMLAutoTranslatorAdmin{$PageCamelCase}Page" and
+ * filename must be "{$PageCamelCase}.php"
  */
 interface WPMLAutoTranslatorAdminPageI {
     
@@ -18,6 +20,8 @@ interface WPMLAutoTranslatorAdminPageI {
     /**
      * Instantiate elements for admin page, it include (if necessary):
      * register_setting, add_settings_section and add_settings_field
+     * 
+     * This function (like init_hooks) will be instantiated everytime (for options.php and other auto pages)
      * 
      * All callbacks (methods) must be from the new class (all public static)
      */

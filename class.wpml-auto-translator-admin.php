@@ -29,24 +29,31 @@ class WPMLAutoTranslatorAdmin {
     }
     
     /**
-     * Include the current page admin class required to show (if any)
+     * Include all page admin class
+     * Is required load all for options/hooks things.
+     * This only will be loaded in admin panel. And yes, this is too much slow action...
      */
     public static function include_page_class() {
-        // include all admin pages
-        foreach ( glob( WPMLAT__PLUGIN_DIR . "includes/admin/*.php" ) as $file ) {
-            include_once $file;
+        // include all admin pages and initialize settings and hooks
+        $path = WPMLAT__PLUGIN_DIR . 'pages/admin/';
+        $dh = opendir($path);
+        while (($page = readdir($dh)) !== false) {
+            if ( $page === '.' or $page === '..' )   continue;
+            
+            // Including php file
+            $full_path = $path . $page;
+            include_once $full_path;
+            
+            // Checking class
+            $page = substr($page, 0, strpos($page, '.php'));
+            $class = 'WPMLAutoTranslatorAdmin'.$page.'Page';
+            if (!class_exists($class)) {
+                die ('Class ' . $class .' not exist. Check that file ' . $full_path . ' exist and contain this class.' );
+            }
+            
+            // Prepare class initialization
+            add_action( 'admin_init', [ $class, 'initialize' ] );
         }
-//        if (isset($_GET['page'])) {
-//            $page = $_GET['page'];
-//            $key = 'wpmlat_';
-//            $wpmlatPos = strpos($page, $key);
-//            if (false !== $wpmlatPos) {
-//                $page = sanitize_text_field(substr($page, strlen($key)));
-//                require_once WPMLAT__PLUGIN_DIR . "includes/admin/{$page}-page.php";
-//                
-//            }
-//        }
-//        add_action( 'admin_init', [ 'WPMLAutoTranslatorAdminConfigPage', 'initialize' ] );
     }
 
     /**
