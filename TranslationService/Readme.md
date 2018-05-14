@@ -1,5 +1,10 @@
 # WPML Auto Translation
 
+## Important
+
+1- If you need extra files for TranslationService, add to ```external``` (you can use subfolders if you need). In future versions this can be moved to ```TranslationService``` folder.
+2- This is NOT a ```WPML Translation Service```, is a Translation Service for ```WPML Auto Translator``` (independent plugin)
+
 ## Translation service
 
 This folder contains all classes which interact with external functions to do a translation.

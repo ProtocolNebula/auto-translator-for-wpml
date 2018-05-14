@@ -28,7 +28,6 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
     public static function initialize() {
         $className = get_called_class();
 
-
         if (!isset(self::$instances[$className])) {
             $instance = new $className;
             $instance->init_hooks();
@@ -72,8 +71,6 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
      * @param type $section
      */
     public function add_setting_select($name, $items, $text, $multiselect = false, $sanitize_callback = '', $section = 'wpmlat_setting_section') {
-        $this->load_options_data();
-        
         // register a new setting for "reading" page
         register_setting('wpmlat', $name, $sanitize_callback);
         

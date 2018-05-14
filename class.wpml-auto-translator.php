@@ -93,6 +93,30 @@ class WPMLAutoTranslator {
         
         return $return;
     }
+    
+    /**
+     * Return an array with only all "TranslationServices"
+     * @return array (id=>Translation service name)
+     */
+    public static function get_translation_services() {
+        $return = array();
+        
+        $path = WPMLAT__TRANSLATION_SERVICES_DIR;
+        $dh = opendir($path);
+        while (($item = readdir($dh)) !== false) {
+            if ( $item === '.' or $item === '..' or $item === 'TranslationService.php' ) continue;
+            
+            $full_path = $path . $item;
+            $file_data = wp_check_filetype($full_path);
+            
+            $posExtension = strpos($item, '.php');
+            if (false !== $posExtension) {
+                $return[ $item ] = substr( $item, 0, $posExtension );
+            }
+        }
+        
+        return $return;
+    }
 
     public static function view($name, array $args = array()) {
         load_plugin_textdomain('wmplat');
