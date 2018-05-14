@@ -35,6 +35,6 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
      */
     public function load_options_data($param) {
         $this->elements['languages'] = WPMLAutoTranslator::get_active_languages_short();
-//        $this->elements['posts_types'] = get_post_types();        
+        $this->elements['posts_types'] = get_post_types();        
     }
 }
