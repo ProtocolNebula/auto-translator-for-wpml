@@ -32,7 +32,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         if (!$instance->initiated) {
             $instance->initiated = true;
             $instance->init_hooks();
-            $instance->init_settings();
+            $instance->init_page();
         }
         return $instance;
     }

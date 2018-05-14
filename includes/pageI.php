@@ -21,7 +21,7 @@ interface WPMLAutoTranslatorAdminPageI {
      * 
      * All callbacks (methods) must be from the new class (all public static)
      */
-    public function init_settings();
+    public function init_page();
     
     /**
      * Show the configuration related page.
