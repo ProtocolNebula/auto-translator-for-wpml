@@ -16,7 +16,7 @@ class GoogleTranslateFree implements TranslationService {
     }
     
     public function translate($text, $sourceLanguage, $destinationLanguage) {
-        usleep(6000);
+        usleep(6000); // Wait 6 miliseconds between each petition
         return self::$googleService->translate($sourceLanguage, $destinationLanguage, $text);
     }
 

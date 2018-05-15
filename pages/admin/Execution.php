@@ -20,10 +20,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     private $finished = false;
     
     /**
-     * Next offset to continue
+     * Next page to continue
      * @var int 
      */
-    private $next_offset = 0;
+    private $next_page = 0;
     
     public function init_hooks() {
     }
@@ -37,17 +37,17 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
      */
     public function show_page() {
         if (current_user_can('manage_options')) {
-            // View file
-            
-//            if ($this->settings['current_offset'] !== null) {
+            if ( $this->settings['current_page'] > 0 ) {
                 $this->doTranslation();
-//            }
+            }
             
+            // View file
             WPMLAutoTranslator::view('admin/execution', array(
-                'settings'=>$this->settings,
-                'refresh'=>$this->refresh,
-                'finished'=>$this->finished,
-                'next_offset'=>$this->next_offset,
+                'settings' => $this->settings,
+                'refresh' => $this->refresh,
+                'finished' => $this->finished,
+                'next_page' => $this->next_page,
+                'next_url' => $this->prepareNextUrl(),
             ));
         }
     }
@@ -56,41 +56,44 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
      * Do the translation process (it will do "paginated" auto refreshing)
      */
     private function doTranslation() {
-        // Get all posts to check
-//        $posts = get_posts(array(
-//            'numberposts'=>$this->settings['max_step'],
-//            'offset'=>$this->settings['current_offset'],
-//            'order'=>'desc',
-//            'orderby'=>'ID'
-//        ));
-        
         $langs = $this->settings['languages'];
         
+        // Get all posts to check
         $elements = new WP_Query(array(
             'post_type' => $this->settings['post_types'],
+            'posts_per_page' => $this->settings['max_step'],
+            'paged' => $this->settings['current_page'],
         ));
         
         if (isset($elements->posts) and count($elements->posts[0])) {
             foreach ($elements->posts as $post) {
-                echo 'Translating post ID: ',$post->ID,'<br />';
+                echo 'Checking post ID: ',$post->ID,'<br />';
                 foreach ($langs as $lang) {
                     $translated = WPMLAutoTranslator::translateItem(array(
                         'element_id' => $post->ID,
                         'lang' => $lang,
                     ));
-                    
-                    if ($translated) {
-                        echo 'To: ' , $lang,'<br />';
-                    }
+                    // if ($translated) echo 'To: ' , $lang,'<br />';
                 }
-                echo '<br />';
+                // echo '<br />';
             }
-            $this->next_offset = $this->settings['current_offset'] + $this->settings['max_step'];
+            $this->next_page = $this->settings['current_page'] + 1;
             $this->refresh = true;
         } else {
             $this->finished = true;
         }
+    }
+    
+    /**
+     * Prepare url for the next "page" (or the first page)
+     * This functin require that $this->next_page will be filled before called
+     */
+    private function prepareNextUrl() {
+        $get = $_GET;
+        $get['datapage'] = ($this->next_page > 0) ? $this->next_page : 1;
+        $url = $_SERVER['SCRIPT_NAME'] . '?' . http_build_query($get);
         
+        return $url;
     }
     
     /**
@@ -102,6 +105,6 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
         // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
-        $this->settings['current_offset'] = get_query_var( 'offset', null );
+        $this->settings['current_page'] = intval( $_GET['datapage'] ); // get_query_var( 'datapage', null );
     }
 }
