@@ -30,8 +30,10 @@ settings_errors('wporg_messages');
         settings_fields('wpmlat');
         
         // output setting sections and their fields
-        // (sections are registered for "wporg", each field is registered to a specific section)
+        // (sections are registered for "wpmlat", each field is registered to a specific section)
         do_settings_sections('wpmlat');
+        
+        _e('Depending of configuration, some options can have suboptions, it will appear after save.', 'wpmlat');
         
         // output save settings button
         submit_button(__('Save Settings', 'wpmlat'));

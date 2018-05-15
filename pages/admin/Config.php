@@ -26,7 +26,7 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
     public function show_page() {
         if (current_user_can('manage_options')) {
             // load config.php view
-            WPMLAutoTranslator::view('admin/config', compact('test'));
+            WPMLAutoTranslator::view('admin/config');
         }
     }
     

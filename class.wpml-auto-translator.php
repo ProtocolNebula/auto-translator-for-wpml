@@ -33,7 +33,7 @@ class WPMLAutoTranslator {
      * @return bool If file/class not exist it will return false
      */
     private static function init_service() {
-        $service = 'GoogleTranslateFree';
+        $service = get_option( 'wpmlat_translation_service' );
         
         $translationServicePath = WPMLAT__PLUGIN_DIR . 'TranslationService/'.$service.'.php';
         if (is_file($translationServicePath)) {
@@ -88,7 +88,7 @@ class WPMLAutoTranslator {
         $return = array();
         
         foreach ($langs as $k=>$v) {
-            $return[$v['id']] = $v['default_locale'] . ' - ' . $v['native_name'];
+            $return[$v['code']] = $v['default_locale'] . ' - ' . $v['native_name'];
         }
         
         return $return;
@@ -111,7 +111,8 @@ class WPMLAutoTranslator {
             
             $posExtension = strpos($item, '.php');
             if (false !== $posExtension) {
-                $return[ $item ] = substr( $item, 0, $posExtension );
+                $name = substr( $item, 0, $posExtension );
+                $return[ $name ] = $name;
             }
         }
         
@@ -138,6 +139,9 @@ class WPMLAutoTranslator {
      *      - element_id: Post/Page/Element ID
      *      - lang: Destination language
      * @throws Exception If data is missing, it will throw an exception
+     * @return bool Return true if some field is modified/translated
+     *      It can return true and not make any modificaiton if wpml throws an error (like limit characters)
+     *      It can return false if all is translated or destination language is the same
      */
     public static function translateItem($args = array()) {
         if (!isset($args['element_id'])) {
@@ -171,17 +175,19 @@ class WPMLAutoTranslator {
         $sourceLang = $meta->source_language_code;
         $destLang = $meta->language_code;
 
+        if ('' == $sourceLang or $sourceLang == $destLang) return false;
+        
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
                 $sourceText = base64_decode($element->field_data);
                 $newText = self::doTranslation($sourceText, $sourceLang, $destLang);
-                
+
                 if ($newText !== null) {
                     // Convert the first letter to mayus if necessary
                     if (ctype_upper($sourceText[0]) and !ctype_upper($newText[0])) {
                         $newText[0] = strtoupper($newText[0]);
                     }
-                    
+
                     // wpml-translation-management\inc\ajax.php
                     $toSave['fields'][$element->field_type] = array(
                         'data' => $newText,
@@ -194,7 +200,8 @@ class WPMLAutoTranslator {
 
         if (!empty($toSave)) {
             // wpml-translation-management\inc\ajax.php
-            $ret = $tm->save_translation($toSave);
+            $ret = $tm->save_translation($toSave);            
+            return true;
         }
         
         return true;

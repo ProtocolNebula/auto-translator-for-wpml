@@ -64,32 +64,26 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
 //            'orderby'=>'ID'
 //        ));
         
-        $args = array(
-            'post_type' => 'page'
-//            'tax_query' => array(
-//                'relation' => 'AND',
-//                array(
-//                    'taxonomy' => 'movie_genre',
-//                    'field' => 'slug',
-//                    'terms' => array('action', 'comedy'),
-//                ),
-//                array(
-//                    'taxonomy' => 'actor',
-//                    'field' => 'term_id',
-//                    'terms' => array(103, 115, 206),
-//                    'operator' => 'NOT IN',
-//                ),
-//            ),
-        );
-        $elements = new WP_Query($args);
+        $langs = $this->settings['languages'];
         
-        print_r($elements);
-
-        if (!empty($posts)) {
-            
-            foreach ($posts as $post) {
-                print_r($post);
-                echo '<hr />';
+        $elements = new WP_Query(array(
+            'post_type' => $this->settings['post_types'],
+        ));
+        
+        if (isset($elements->posts) and count($elements->posts[0])) {
+            foreach ($elements->posts as $post) {
+                echo 'Translating post ID: ',$post->ID,'<br />';
+                foreach ($langs as $lang) {
+                    $translated = WPMLAutoTranslator::translateItem(array(
+                        'element_id' => $post->ID,
+                        'lang' => $lang,
+                    ));
+                    
+                    if ($translated) {
+                        echo 'To: ' , $lang,'<br />';
+                    }
+                }
+                echo '<br />';
             }
             $this->next_offset = $this->settings['current_offset'] + $this->settings['max_step'];
             $this->refresh = true;
@@ -106,6 +100,8 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     public function load_options_data($param) {
         $this->settings['max_step'] = get_option( 'wpmlat_max_translations_step', 50 );
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
+        $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
+        // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
         $this->settings['current_offset'] = get_query_var( 'offset', null );
     }
 }
