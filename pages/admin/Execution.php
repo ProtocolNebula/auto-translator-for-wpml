@@ -29,6 +29,11 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     }
 
     public function init_page() {
+        // Section configuration (include name)
+        add_settings_section(
+            'wpmlat_execution_section', __('WPMLAT Execution'), null, 'wpmlat'
+        );
+        
         $this->load_options_data();
     }
 
@@ -56,6 +61,12 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
      * Do the translation process (it will do "paginated" auto refreshing)
      */
     private function doTranslation() {
+        if (!WPMLAutoTranslator::wpml_available()) {
+            $this->refresh = false;
+            $this->finished = true;
+            return false;
+        }
+        
         $langs = $this->settings['languages'];
         
         // Get all posts to check

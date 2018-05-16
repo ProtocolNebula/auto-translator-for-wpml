@@ -23,9 +23,39 @@ class WPMLAutoTranslatorAdmin {
         self::include_page_class();
 
         add_action('admin_init', array('WPMLAutoTranslatorAdmin', 'admin_init'));
-        add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 20 );
+        add_action('admin_menu', array('WPMLAutoTranslatorAdmin', 'admin_menu'), 40 );
+        add_action('admin_notices', array('WPMLAutoTranslatorAdmin', 'admin_notices'), 20 );
 
         //add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__FILE__) . 'akismet.php'), array('Akismet_Admin', 'admin_plugin_settings_link'));
+    }
+    
+    public static function admin_notices () {
+        if (!WPMLAutoTranslator::wpml_available()) {
+            self::print_admin_notices( 
+                __('WPML Not found for WPMLAT.', 'wpmlat'), 
+                sprintf ( __( 'Please, install WPML, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), 'https://wpml.org/?aid=188550&affiliate_key=ZNyQ9dyyFFii&dr=wpmlat-referral' ), 
+                'error' 
+            );
+        }
+    }
+    
+    /**
+     * Show a message box
+     * @param type $title
+     * @param type $message
+     * @param type $type
+     */
+    public static function print_admin_notices ( $title, $message, $type = 'error' ) {
+        ?>
+            <div class='error'>
+                <?php if ($title) { ?>
+                    <p><strong><?php echo $title; ?></strong></p>
+                <?php }
+                if ($message) { ?>
+                    <p><?php echo $message; ?></p>
+                <?php } ?>
+            </div>
+        <?php
     }
     
     /**

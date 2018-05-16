@@ -72,6 +72,14 @@ class WPMLAutoTranslator {
     }
     
     /**
+     * Check if wpml is available
+     * @return type
+     */
+    public static function wpml_available () {
+        return class_exists('TranslationManagement');
+    }
+    
+    /**
      * Return all active languages (wpml_active_languages)
      * @return array
      */
@@ -105,10 +113,9 @@ class WPMLAutoTranslator {
         $dh = opendir($path);
         while (($item = readdir($dh)) !== false) {
             $full_path = $path . $item;
-            if ( $item === '.' or $item === '..' or !is_dir($full_path) ) continue;
+            if ( $item === '.' or $item === '..' or !is_dir($full_path) ) continue;;
             
-            $return[ $name ] = $name;
-            $posExtension = $item;
+            $return[ $item ] = $item;
         }
         
         return $return;

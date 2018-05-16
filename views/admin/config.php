@@ -3,21 +3,13 @@
  * Generic configuration page
  * Load this page on all configuration page if you don't need other custom view
  */
-if (!class_exists('TranslationManagement')) {
-    ?>
-    <div class='error'>
-        <?php /* <p><strong><?php printf( esc_html__( 'Akismet Error Code: %s', 'akismet' ), $code ); ?></strong></p> */ ?>
-        <p><?php _e('Error: TranslationManagement class not found. Please, install wpml-string-translation.', 'wpmlat'); ?></p>
-    </div>
-    <?php
-}
 
 // check if the user have submitted the settings
 // wordpress will add the "settings-updated" $_GET parameter to the url
-if (isset($_GET['settings-updated'])) {
+//if (isset($_GET['settings-updated'])) {
     // add settings saved message with the class of "updated"
     // add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'wporg'), 'updated');
-}
+//}
 
 // show error/update messages
 settings_errors('wporg_messages');
