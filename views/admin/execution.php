@@ -11,9 +11,13 @@
             __( 'You can\'t use this plugin until WPML is configured.', 'wpmlat' ),
         '</p>';
     } else {
+        if ( '' != $result_execution and !$refresh ) {
+            echo '<div class="wpmlat_autorefresh" >',$result_execution,'</div>';
+        }
+        
         if ( $refresh ) {
-            echo '<meta http-equiv="refresh" content="2; url=' , $next_url , '">';
-            echo 'Refreshing... <a href="' , $next_url , '">Click here if this process freeze.';
+            echo '<noscript><meta class="wpmlat_autorefresh" http-equiv="refresh" content="5; url=' , $next_url , '"></noscript>';
+            echo '<div id="wpmlat_execution_content">Refreshing... <a href="' , $next_url , '">Click here if this process freeze.</a></div>';
         } elseif ( $finished ) {
             _e( 'All items translated', 'wpmlat' );
         } else {
@@ -26,7 +30,7 @@
 
             echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a> ";
             echo "<a href='" . WPMLAT_SETTINGS_URL . "' class='button'>" . __( 'Configure WPMLA', 'wpmlat' ) . "</a>";
-        }    
+        }
     }
     ?>
 </div>

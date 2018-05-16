@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 define ('WPMLAT_VERSION', '1.0');
 define ('WPMLAT__PLUGIN_DIR', plugin_dir_path( __FILE__ ));
+define ('WPMLAT__PLUGIN_DIR_PUBLIC', WPMLAT__PLUGIN_DIR . 'public/' ); // If you use in plugins_url or similar, public must be "redeclared" on relative path
 define ('WPMLAT__TRANSLATION_SERVICES_DIR', WPMLAT__PLUGIN_DIR . 'TranslationService/' );
 
 register_activation_hook( __FILE__, array( 'WPMLAutoTranslator', 'plugin_activation' ) );

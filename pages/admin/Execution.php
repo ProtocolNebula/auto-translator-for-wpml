@@ -26,6 +26,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     private $next_page = 0;
     
     public function init_hooks() {
+        add_action( 'wp_ajax_wpmlat_execute', [ $this, 'doTranslationAjax' ] );
+        
+        // load JS for ajax
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts_execution' ] );
     }
 
     public function init_page() {
@@ -42,8 +46,12 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         );
         
         if (current_user_can('manage_options')) {
+            $result_execution = '';
             if ( $this->settings['current_page'] > 0 ) {
-                $this->doTranslation();
+                ob_start();
+                    $this->doTranslation();
+                    $result_execution = ob_get_contents();
+                ob_end_clean();
             }
             
             // View file
@@ -53,8 +61,42 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                 'finished' => $this->finished,
                 'next_page' => $this->next_page,
                 'next_url' => $this->prepareNextUrl(),
+                'result_execution' => $result_execution,
             ));
         }
+    }
+    
+    /**
+     * Function to execute "doTranslation" from ajax petition
+     */
+    public function doTranslationAjax() {
+        // Faking data from post
+        $_GET['datapage'] = $_POST['datapage'];
+        $this->settings['current_page'] = $_GET['datapage'];
+        
+        ob_start();
+            $this->doTranslation();
+            $result = ob_get_contents();
+        ob_end_clean();
+        
+        $data = array(
+            'refresh' => $this->refresh,
+            'finished' => $this->finished,
+            'next_page' => $this->next_page,
+            'result_execution' => $result,
+            'next_url' => '',
+        );
+        
+        if ($this->finished) {
+            // Force for generate get
+            $this->next_page = $this->settings['current_page'];
+        }
+        $data['next_url'] = $this->prepareNextUrl();
+        
+        echo json_encode($data);
+        
+        //wp_die();
+        die();
     }
     
     /**
@@ -102,7 +144,11 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     private function prepareNextUrl() {
         $get = $_GET;
         $get['datapage'] = ($this->next_page > 0) ? $this->next_page : 1;
-        $url = $_SERVER['SCRIPT_NAME'] . '?' . http_build_query($get);
+        // $url = $_SERVER['SCRIPT_NAME'] . '?' . http_build_query($get);
+        
+        // Sanitize:
+        unset($get['page']); // This will be in WPMLAT_EXECUTION_URL
+        $url = WPMLAT_EXECUTION_URL . '&' . http_build_query($get);
         
         return $url;
     }
@@ -117,5 +163,24 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
         // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
         $this->settings['current_page'] = intval( $_GET['datapage'] ); // get_query_var( 'datapage', null );
+    }
+    
+    public function enqueue_scripts_execution($hook) {
+        if( 'wpml_page_wpmlat_execution' != $hook ) {
+            // Only applies to dashboard panel
+            return;
+        }
+
+        if ( $this->settings['current_page'] > 0 and !$this->finished ) {
+            wp_enqueue_script( 'ajax-script', plugins_url( '/public/js/execution.js', WPMLAT__PLUGIN_DIR_PUBLIC ), array('jquery') );
+
+            // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
+            wp_localize_script( 'ajax-script', 'ajax_object',
+                array( 
+                    'ajax_url' => admin_url( 'admin-ajax.php' ), 
+                    'datapage' => $this->settings['current_page'],
+                    'max_step' => $this->settings['max_step'],
+                ));
+        }
     }
 }
