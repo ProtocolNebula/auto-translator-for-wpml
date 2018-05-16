@@ -119,6 +119,12 @@ class WPMLAutoTranslator {
         return $return;
     }
 
+    /**
+     * Show file from "view"
+     * @param string $name File name (and parent folder if any). ex: admin/config
+     * @param array $args Variables that will be mapped to use in the view.
+     *  EX: array('var1' => 'thing'); // You can show in your view using $var1
+     */
     public static function view($name, array $args = array()) {
         load_plugin_textdomain('wmplat');
 
@@ -128,13 +134,12 @@ class WPMLAutoTranslator {
 
         include( $file );
     }
-    
-    public function getItemsToTranslate($page) {
-        
-    }
 
     /**
      * Make an item translation with plugin settings
+     * Callable with:
+     *      - $translated = WPMLAutoTranslator::translateItem([]);
+     *      - do_action( 'wpmlat_translate_item', [ARGS]);
      * @param array $args
      *      - element_id: Post/Page/Element ID
      *      - lang: Destination language
@@ -151,15 +156,18 @@ class WPMLAutoTranslator {
             throw new Exception(__('No destination lang specified to auto translate'));
         }
         
+        // Get the page/post to translate
         $tm = new TranslationManagement();
         $jobID = $tm->get_translation_job_id($args['element_id'], $args['lang']);
         
+        // If not exist we must create the translation job
         if (!$jobID) {
             $res = $tm->create_translation_package($args['element_id']);
             $wpml_translation_job_factory = wpml_tm_load_job_factory();
             $jobID = $wpml_translation_job_factory->create_local_post_job($args['element_id'], $args['lang']);
         }
         
+        // Load element details
         $meta = $tm->get_element_translation($args['element_id'], $args['lang']);
         $res = $tm->get_translation_job($jobID);
 
@@ -175,8 +183,10 @@ class WPMLAutoTranslator {
         $sourceLang = $meta->source_language_code;
         $destLang = $meta->language_code;
 
+        // Nothing to translate?
         if ('' == $sourceLang or $sourceLang == $destLang) return false;
         
+        // Check all items of that element (for elementor or other composers)
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
                 $sourceText = base64_decode($element->field_data);
@@ -198,13 +208,15 @@ class WPMLAutoTranslator {
             }
         }
 
+        // Something has changed
         if (!empty($toSave)) {
-            // wpml-translation-management\inc\ajax.php
-            $ret = $tm->save_translation($toSave);            
+            // More information in: wpml-translation-management\inc\ajax.php
+            $ret = $tm->save_translation($toSave);
             return true;
         }
         
-        return true;
+        // Nothing changed
+        return false;
     }
     
     /**
