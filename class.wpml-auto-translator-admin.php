@@ -1,4 +1,7 @@
 <?php
+// Main url to sections
+const WPMLAT_SETTINGS_URL = 'options-general.php?page=wpmlat_config';
+const WPMLAT_EXECUTION_URL = 'admin.php?page=wpmlat_execution';
 
 class WPMLAutoTranslatorAdmin {
 
@@ -107,6 +110,8 @@ class WPMLAutoTranslatorAdmin {
         );
         
         $main_page = apply_filters( 'icl_menu_main_page', WPML_PLUGIN_FOLDER . '/menu/languages.php' );
+        // $main_page = null; // Hide from menu
+        // $main_page = 'tools.php'; // Put in tools submenu
         add_submenu_page( 
             $main_page, 
             __( 'WPML Auto Translation', 'wpmlat' ), 

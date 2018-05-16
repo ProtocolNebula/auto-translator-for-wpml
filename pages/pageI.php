@@ -19,7 +19,7 @@ interface WPMLAutoTranslatorAdminPageI {
     
     /**
      * Instantiate elements for admin page, it include (if necessary):
-     * register_setting, add_settings_section and add_settings_field
+     * register_setting and add_settings_field
      * 
      * This function (like init_hooks) will be instantiated everytime (for options.php and other auto pages)
      * 
@@ -29,6 +29,7 @@ interface WPMLAutoTranslatorAdminPageI {
     
     /**
      * Show the configuration related page.
+     * It can include "add_settings_section"
      * 
      * @example 
      *  if (current_user_can('manage_options')) {

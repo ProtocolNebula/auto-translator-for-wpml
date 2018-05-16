@@ -24,7 +24,8 @@
                 __( 'At this moment, is only posible to check ALL posts even are translated, so this process will be a bit slow.', 'wpmlat' ),
             '</p>';
 
-            echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a>";
+            echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a> ";
+            echo "<a href='" . WPMLAT_SETTINGS_URL . "' class='button'>" . __( 'Configure WPMLA', 'wpmlat' ) . "</a>";
         }    
     }
     ?>

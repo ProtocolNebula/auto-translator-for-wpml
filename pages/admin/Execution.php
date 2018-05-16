@@ -29,11 +29,6 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     }
 
     public function init_page() {
-        // Section configuration (include name)
-        add_settings_section(
-            'wpmlat_execution_section', __('WPMLAT Execution'), null, 'wpmlat'
-        );
-        
         $this->load_options_data();
     }
 
@@ -41,6 +36,11 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
      * Called to show the page. Call the translation process
      */
     public function show_page() {
+        // Section configuration (include name)
+        add_settings_section(
+            'wpmlat_execution_section', __('WPMLAT Execution'), null, 'wpmlat'
+        );
+        
         if (current_user_can('manage_options')) {
             if ( $this->settings['current_page'] > 0 ) {
                 $this->doTranslation();
