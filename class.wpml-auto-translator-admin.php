@@ -36,7 +36,7 @@ class WPMLAutoTranslatorAdmin {
         if (!WPMLAutoTranslator::wpml_available()) {
             self::print_admin_notices( 
                 __('WPML Not found for WPMLAT.', 'wpmlat'), 
-                sprintf ( __( 'Please, install WPML, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), 'https://wpml.org/?aid=188550&affiliate_key=ZNyQ9dyyFFii&dr=wpmlat-referral' ), 
+                sprintf ( __( 'Please, install WPML and WPML Translation Management, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), 'https://wpml.org/?aid=188550&affiliate_key=ZNyQ9dyyFFii&dr=wpmlat-referral' ), 
                 'error' 
             );
         }

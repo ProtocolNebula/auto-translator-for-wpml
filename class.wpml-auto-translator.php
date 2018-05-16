@@ -76,7 +76,7 @@ class WPMLAutoTranslator {
      * @return type
      */
     public static function wpml_available () {
-        return class_exists('TranslationManagement');
+        return class_exists('TranslationManagement') and function_exists('wpml_tm_load_job_factory');
     }
     
     /**
@@ -187,7 +187,6 @@ class WPMLAutoTranslator {
 
         // Nothing to translate?
         if ('' == $sourceLang or $sourceLang == $destLang) return false;
-        
         // Check all items of that element (for elementor or other composers)
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
