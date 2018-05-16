@@ -90,8 +90,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         if ($this->finished) {
             // Force for generate get
             $this->next_page = $this->settings['current_page'];
+            $data['next_url'] = WPMLAT_EXECUTION_URL; // Return to main scren
+        } else {
+            $data['next_url'] = $this->prepareNextUrl(); // Next url
         }
-        $data['next_url'] = $this->prepareNextUrl();
         
         echo json_encode($data);
         
