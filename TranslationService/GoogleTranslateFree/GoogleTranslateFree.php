@@ -1,7 +1,7 @@
 <?php
 namespace racs\wpmlat\TranslationService;
 
-require_once WPMLAT__PLUGIN_DIR . 'external/GoogleTranslate.php';
+require_once __DIR__ . '/lib/GoogleTranslate.php';
 
 use \Statickidz\GoogleTranslate;
 

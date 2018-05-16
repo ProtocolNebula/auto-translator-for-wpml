@@ -35,7 +35,7 @@ class WPMLAutoTranslator {
     private static function init_service() {
         $service = get_option( 'wpmlat_translation_service' );
         
-        $translationServicePath = WPMLAT__PLUGIN_DIR . 'TranslationService/'.$service.'.php';
+        $translationServicePath = WPMLAT__PLUGIN_DIR . 'TranslationService/'.$service.'/'.$service.'.php';
         if (is_file($translationServicePath)) {
             include_once $translationServicePath;
             $service = 'racs\\wpmlat\\TranslationService\\'.$service;
@@ -104,16 +104,11 @@ class WPMLAutoTranslator {
         $path = WPMLAT__TRANSLATION_SERVICES_DIR;
         $dh = opendir($path);
         while (($item = readdir($dh)) !== false) {
-            if ( $item === '.' or $item === '..' or $item === 'TranslationService.php' ) continue;
-            
             $full_path = $path . $item;
-            $file_data = wp_check_filetype($full_path);
+            if ( $item === '.' or $item === '..' or !is_dir($full_path) ) continue;
             
-            $posExtension = strpos($item, '.php');
-            if (false !== $posExtension) {
-                $name = substr( $item, 0, $posExtension );
-                $return[ $name ] = $name;
-            }
+            $return[ $name ] = $name;
+            $posExtension = $item;
         }
         
         return $return;
