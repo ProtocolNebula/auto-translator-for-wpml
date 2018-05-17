@@ -31,10 +31,9 @@
             if ( $can_do_translation ) {
                 echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a> ";
             } else {
-                _e('Please, enable WPML and WPML String Translator (if you want to use it)', 'wpmlat');
-                echo '<br />';
+                echo '<p>' , __('Please, enable <b>WPML</b> and <b>WPML String Translator</b> (if you want to use it)', 'wpmlat') , '</p>';
             }
-            echo "<a href='" . WPMLAT_SETTINGS_URL . "' class='button'>" . __( 'Configure WPMLA', 'wpmlat' ) . "</a>";
+            echo "<p><a href='" . WPMLAT_SETTINGS_URL . "' class='button'>" . __( 'Configure WPMLA', 'wpmlat' ) . "</a></p>";
         }
     }
     ?>
