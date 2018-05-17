@@ -46,12 +46,18 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         );
         
         if (current_user_can('manage_options')) {
+            $can_do_translation = true;
+            
             $result_execution = '';
             if ( $this->settings['current_page'] > 0 ) {
                 ob_start();
                     $this->doTranslation();
                     $result_execution = ob_get_contents();
                 ob_end_clean();
+            } else if ( $this->settings['string_translator'] ) {
+                // Will avoid this on every translation step because require a lot of time
+                // Basically this check if the string_stranslator is enabled
+                $can_do_translation = WPMLAutoTranslator::wpml_string_translator_active();
             }
             
             // View file
@@ -62,6 +68,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                 'next_page' => $this->next_page,
                 'next_url' => $this->prepareNextUrl(),
                 'result_execution' => $result_execution,
+                'can_do_translation' => $can_do_translation,
             ));
         }
     }
@@ -163,6 +170,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['max_step'] = get_option( 'wpmlat_max_translations_step', 50 );
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
+        $this->settings['string_translator'] = ( true == get_option( 'wpmlat_use_string_translator' ) );
         // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
         $this->settings['current_page'] = intval( $_GET['datapage'] ); // get_query_var( 'datapage', null );
     }

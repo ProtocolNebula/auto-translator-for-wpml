@@ -88,6 +88,15 @@ class WPMLAutoTranslator {
     }
     
     /**
+     * Check if WPML String Translator is active (and obviously WPML)
+     * @return bool
+     */
+    public static function wpml_string_translator_active() {
+        $wpml_plugins_list = SitePress::get_installed_plugins();
+        return ( self::wpml_available() && true === $wpml_plugins_list['WPML String Translation']['active'] );
+    }
+    
+    /**
      * Return an array with only keys and language names
      * @return array (id=>Language text)
      */

@@ -28,7 +28,12 @@
                 __( 'At this moment, is only posible to check ALL posts even are translated, so this process will be a bit slow.', 'wpmlat' ),
             '</p>';
 
-            echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a> ";
+            if ( $can_do_translation ) {
+                echo "<a href='{$next_url}' class='button button-primary'>" . __( 'Start translation', 'wpmlat' ) . "</a> ";
+            } else {
+                _e('Please, enable WPML and WPML String Translator (if you want to use it)', 'wpmlat');
+                echo '<br />';
+            }
             echo "<a href='" . WPMLAT_SETTINGS_URL . "' class='button'>" . __( 'Configure WPMLA', 'wpmlat' ) . "</a>";
         }
     }
