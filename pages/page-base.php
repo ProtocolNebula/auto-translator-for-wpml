@@ -82,6 +82,27 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         );
     }
     
+    /**
+     * Add a single checkbox setting
+     * IMPORTANT: This checkbox not support arrays (ex: check[1], check[2]), so it will only support "check" (as name)
+     * @param string $name
+     * @param string $value
+     * @param string $text
+     * @param type $sanitize_callback
+     * @param type $section
+     */
+    public function add_setting_checkbox($name, $value, $text, $multiselect = false, $sanitize_callback = '', $section = 'wpmlat_setting_section') {
+        // register a new setting for "reading" page
+        register_setting('wpmlat', $name, $sanitize_callback);
+        
+        // register a new field in the section
+        add_settings_field(
+            $name, $text, 
+            array('WPMLAutoTranslatorAdminPageBase', 'show_checkbox'), 
+            'wpmlat', $section, array('name'=>$name, 'value'=>$value)
+        );
+    }
+    
     
     /**
      * Show an input from "add_settings_field" callback
@@ -105,6 +126,31 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         
         ?>
         <input type="text" name="<?php echo $name; ?>" value="<?php echo isset($setting) ? esc_attr($setting) : ''; ?>">
+        <?php
+    }
+    
+    /**
+     * Show a checkbox from "add_settings_field" callback
+     * @param type $args Arguments to mount the input
+     *      - name: (required) Option name (id field in add_settings_field)
+     *      - value: (required) Value if checked
+     * 
+     *  OPTIONAL VALUES for CORE function: (https://developer.wordpress.org/reference/functions/add_settings_field/)
+     *      - label_for: (optional) When supplied, the setting title will be wrapped in a <label> element, its for attribute populated with this value.
+     *      - class: (optional) CSS Class to be added to the <tr> element when the field is output.
+     */
+    public static function show_checkbox($args) {
+        if (!isset($args['name'])) {
+            echo 'Name argument not specified for input field';
+            return;
+        }
+        
+        $name = $args['name'];
+        
+        // get the value of the setting we've registered with register_setting()
+        $setting = get_option($name, true);
+        ?>
+        <input type="checkbox" name="<?php echo $name; ?>" value="<?php echo $args['value']; ?>" <?php if ($setting) echo ' checked '; ?>>
         <?php
     }
     
