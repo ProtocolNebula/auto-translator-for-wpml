@@ -145,6 +145,7 @@ class WPMLAutoTranslator {
      * @param array $args
      *      - element_id: Post/Page/Element ID
      *      - lang: Destination language
+     *      - translation_complete: Check for translation complete (bool)
      * @throws Exception If data is missing, it will throw an exception
      * @return bool Return true if some field is modified/translated
      *      It can return true and not make any modificaiton if wpml throws an error (like limit characters)
@@ -159,7 +160,7 @@ class WPMLAutoTranslator {
         }
         
         // Get the page/post to translate
-        $tm = new TranslationManagement();
+        $tm = new TranslationManagement(); // WPML Translation Manager, NOT WPMLA
         $jobID = $tm->get_translation_job_id($args['element_id'], $args['lang']);
         
         // If not exist we must create the translation job
@@ -204,6 +205,7 @@ class WPMLAutoTranslator {
                         'data' => $newText,
                         'tid' => $element->tid,
                         'format' => 'base64',
+                        'finished' => $args[ 'translation_complete' ] ? true : false,
                     );
                 }
             }
@@ -211,7 +213,9 @@ class WPMLAutoTranslator {
 
         // Something has changed
         if (!empty($toSave)) {
-            // More information in: wpml-translation-management\inc\ajax.php
+            // More information in: 
+            // wpml-translation-management\inc\ajax.php
+            // wpml-translation-management\inc\translation-jobs\helpers\wpml-save-translation-data-action.class.php
             $ret = $tm->save_translation($toSave);
             return true;
         }
