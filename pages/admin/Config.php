@@ -12,7 +12,7 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
 
     public function init_page() {
         $this->load_options_data();
-        $this->add_setting('wpmlat_max_translations_step', __('Max translations for every refresh (50 recommended)', 'wpmlat'), 'intval');
+        $this->add_setting('wpmlat_max_translations_step', __('Max translations for every refresh (10 recommended)', 'wpmlat'), 10, 'intval');
         $this->add_setting_select('wpmlat_languages', $this->elements['languages'], __('Translate to (only active languages)', 'wpmlat'), true);
         $this->add_setting_select('wpmlat_post_types', $this->elements['posts_types'], __('Translate element types', 'wpmlat'), true);
         $this->add_setting_select('wpmlat_translation_service', $this->elements['translation_services'], __('Translate element types', 'wpmlat'), false);
