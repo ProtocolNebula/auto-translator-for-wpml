@@ -181,12 +181,31 @@ class WPMLAutoTranslator {
      *      It can return false if all is translated or destination language is the same
      */
     public static function translateItem($args = array()) {
+        static $use_translation_management = null;
+        if ( null === $use_translation_management ) {
+            $use_translation_management = ( true == get_option( 'wpmlat_use_translation_management' ) );
+        }
+        
         if (!isset($args['element_id'])) {
             throw new Exception(__('No element_id specified to auto translate'));
         }
         if (!isset($args['lang'])) {
             throw new Exception(__('No destination lang specified to auto translate'));
         }
+        
+        if ($use_translation_management) {
+            self::translateItemWithTranslationManagement($args);
+        } else {
+            throw new Exception(__('Translation without Translation Management in progress'));
+        }
+    }
+    
+    /**
+     * Make a translation using WPML Translation Management
+     * @param array $args Check self::translateItem
+     * @return boolean
+     */
+    private static function translateItemWithTranslationManagement($args) {
         
         // Get the page/post to translate
         $tm = new TranslationManagement(); // WPML Translation Manager, NOT WPMLA
