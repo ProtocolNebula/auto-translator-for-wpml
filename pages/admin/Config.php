@@ -16,7 +16,7 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
         $this->add_setting_select('wpmlat_languages', $this->elements['languages'], __('Translate to (only active languages)', 'wpmlat'), true);
         $this->add_setting_select('wpmlat_post_types', $this->elements['posts_types'], __('Translate element types', 'wpmlat'), true);
         $this->add_setting_select('wpmlat_translation_service', $this->elements['translation_services'], __('Translate element types', 'wpmlat'), false);
-        $this->add_setting_checkbox('wpmlat_use_string_translator', 1, __('Use WPML String Translator (must be active)', 'wpmlat'), false);
+        $this->add_setting_checkbox('wpmlat_use_translation_management', 1, __('Use WPML String Translator (must be active)', 'wpmlat'), false);
         $this->add_setting_checkbox('wpmlat_set_as_translated', true, __('Check elements as translated (only for new translated elements) - BE CAREFUL WITH THIS', 'wpmlat'), false);
     }
 

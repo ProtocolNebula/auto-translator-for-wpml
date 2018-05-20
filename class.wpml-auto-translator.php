@@ -76,7 +76,36 @@ class WPMLAutoTranslator {
      * @return type
      */
     public static function wpml_available () {
-        return class_exists('TranslationManagement') and function_exists('wpml_tm_load_job_factory');
+        return function_exists('icl_object_id');
+    }
+    
+    /**
+     * Check if WPML Translation Management is active
+     * NOTE: If you only need to know if WPML is enabled, use wpml_available() instead.
+     * NOTE 2: What you maybe need is: wpml_full_configured()
+     * @return bool
+     */
+    public static function wpml_translation_management_active() {
+        $wpml_plugins_list = SitePress::get_installed_plugins();
+        
+        if (!class_exists('TranslationManagement') and !function_exists('wpml_tm_load_job_factory')) {
+            return false;
+        }
+        
+        return ( self::wpml_available() && true === $wpml_plugins_list['WPML String Translation']['active'] );
+    }
+    
+    /**
+     * Check if all WPML needed features are active
+     */
+    public static function wpml_full_configured() {
+        $use_translation_management = get_option( 'wpmlat_use_translation_management', false );
+        
+        if ($use_translation_management) {
+            return self::wpml_available() && self::wpml_translation_management_active();
+        }
+        
+        return self::wpml_available();
     }
     
     /**
@@ -85,15 +114,6 @@ class WPMLAutoTranslator {
      */
     public static function get_active_languages() {
         return apply_filters( 'wpml_active_languages', null, array('orderby'=>'code', 'order'=>'asc'));
-    }
-    
-    /**
-     * Check if WPML String Translator is active (and obviously WPML)
-     * @return bool
-     */
-    public static function wpml_string_translator_active() {
-        $wpml_plugins_list = SitePress::get_installed_plugins();
-        return ( self::wpml_available() && true === $wpml_plugins_list['WPML String Translation']['active'] );
     }
     
     /**

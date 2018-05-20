@@ -58,10 +58,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                     $this->doTranslation();
                     $result_execution = ob_get_contents();
                 ob_end_clean();
-            } else if ( $this->settings['string_translator'] ) {
+            } else if ( $this->settings['use_translation_management'] ) {
                 // Will avoid this on every translation step because require a lot of time
                 // Basically this check if the string_stranslator is enabled
-                $can_do_translation = WPMLAutoTranslator::wpml_string_translator_active();
+                $can_do_translation = WPMLAutoTranslator::wpml_translation_management_active();
             }
             
             // View file
@@ -175,7 +175,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['max_step'] = get_option( 'wpmlat_max_translations_step', 50 );
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
-        $this->settings['string_translator'] = ( true == get_option( 'wpmlat_use_string_translator' ) );
+        $this->settings['use_translation_management'] = ( true == get_option( 'wpmlat_use_translation_management' ) );
         $this->settings['translation_complete'] = get_option( 'wpmlat_set_as_translated' );
         // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
         $this->settings['current_page'] = intval( $_GET['datapage'] ); // get_query_var( 'datapage', null );
