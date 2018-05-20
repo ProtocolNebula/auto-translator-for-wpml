@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name:  WPML Auto Translator (WPMLAT)
+Plugin Name:  Auto Translator for WPML (WPMLAT)
 Description:  A plugin to autotranslate with google and WPML
 Version:      1.0
 Author:       Ruben Arroyo Ceruelo

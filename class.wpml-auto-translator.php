@@ -58,7 +58,7 @@ class WPMLAutoTranslator {
             $message .= __('WPML.org is not active. Please, install it before.');
             echo '<div class="notice notice-error"><p>' . esc_html($message) . '</p></div>';
         } else {
-            $message .= __('WPML Auto Translator is now active.');
+            $message .= __('Auto Translator for WPML is now active.');
             echo '<div class="notice notice-success"><p>' . esc_html($message) . '</p></div>';
         }
     }

@@ -1,4 +1,4 @@
-# WPML Auto Translator
+# Auto Translator for WPML
 
 This plugin extends the main funcitonallity to WPML.org plugin.
 
