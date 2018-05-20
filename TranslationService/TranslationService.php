@@ -3,7 +3,7 @@ namespace racs\wpmlat\TranslationService;
 
 /**
  * This interface defines how must be all TranslationService.
- * This file is include in "wpml-auto-translator.php"
+ * This file is include in "auto-translator-for-wpml.php"
  */
 interface TranslationService {
     
