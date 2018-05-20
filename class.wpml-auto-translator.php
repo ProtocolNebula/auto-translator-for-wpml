@@ -196,9 +196,19 @@ class WPMLAutoTranslator {
         if ($use_translation_management) {
             self::translateItemWithTranslationManagement($args);
         } else {
-            throw new Exception(__('Translation without Translation Management in progress'));
+            self::translateItemRaw($args);
         }
     }
+    
+    /**
+     * Make a translation without use WPML Translation Management or similar
+     * @param array $args Check self::translateItem
+     * @return boolean
+     */
+    private static function translateItemRaw($args) {
+        throw new Exception(__('Translation without Translation Management in progress'));
+    }
+    
     
     /**
      * Make a translation using WPML Translation Management
