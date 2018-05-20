@@ -30,7 +30,12 @@
         // output save settings button
         submit_button(__('Save Settings', 'wpmlat'));
         ?>
+        <p>
+            <a href="<?php echo WPMLAT_EXECUTION_URL; ?>" class="button"><?php _e( 'Execution WPMLA page', 'wpmlat' ); ?></a>
+        </p>
         
-        <a href="<?php echo WPMLAT_EXECUTION_URL; ?>" class="button"><?php _e( 'Execution WPMLA page', 'wpmlat' ); ?></a>
+        <p>
+            <a href="https://wpml.org/documentation/translating-your-contents/using-the-translation-editor/" target="_blank"><?php _e( 'More information about Translation Manager'); ?></a>
+        </p>
     </form>
 </div>
