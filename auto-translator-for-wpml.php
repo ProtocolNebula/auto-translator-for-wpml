@@ -24,7 +24,7 @@ register_deactivation_hook( __FILE__, array( 'WPMLAutoTranslator', 'plugin_deact
 require_once( WPMLAT__PLUGIN_DIR . 'TranslationService/TranslationService.php' );
 
 // Class
-require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator.php' );
+require_once( WPMLAT__PLUGIN_DIR . 'class.auto-translator-for-wpml.php' );
 
 add_action( 'init', array( 'WPMLAutoTranslator', 'init' ) );
 
@@ -32,6 +32,6 @@ if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
     // Abstract class for config pages
     require_once( WPMLAT__PLUGIN_DIR . 'pages/page-base.php' );
 
-    require_once( WPMLAT__PLUGIN_DIR . 'class.wpml-auto-translator-admin.php' );
+    require_once( WPMLAT__PLUGIN_DIR . 'class.auto-translator-for-wpml-admin.php' );
     add_action( 'init', array( 'WPMLAutoTranslatorAdmin', 'init' ) );
 }
