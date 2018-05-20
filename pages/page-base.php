@@ -49,7 +49,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
      * @param type $section
      * @param type $type
      */
-    public function add_setting($name, $text, $sanitize_callback = '', $section = 'wpmlat_setting_section') {
+    public function add_setting($name, $text, $default = '', $sanitize_callback = '', $section = 'wpmlat_setting_section') {
         // register a new setting for "reading" page
         register_setting('wpmlat', $name, $sanitize_callback);
         
@@ -57,7 +57,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         add_settings_field(
             $name, $text, 
             array('WPMLAutoTranslatorAdminPageBase', 'show_input'), 
-            'wpmlat', $section, array('name'=>$name)
+            'wpmlat', $section, array('name'=>$name, 'default'=>$default)
         );
     }
     
@@ -91,7 +91,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
      * @param type $sanitize_callback
      * @param type $section
      */
-    public function add_setting_checkbox($name, $value, $text, $multiselect = false, $sanitize_callback = '', $section = 'wpmlat_setting_section') {
+    public function add_setting_checkbox($name, $value, $text, $default = false, $sanitize_callback = '', $section = 'wpmlat_setting_section') {
         // register a new setting for "reading" page
         register_setting('wpmlat', $name, $sanitize_callback);
         
@@ -99,7 +99,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         add_settings_field(
             $name, $text, 
             array('WPMLAutoTranslatorAdminPageBase', 'show_checkbox'), 
-            'wpmlat', $section, array('name'=>$name, 'value'=>$value)
+            'wpmlat', $section, array('name'=>$name, 'value'=>$value, 'default'=>$default)
         );
     }
     
@@ -122,7 +122,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         $name = $args['name'];
         
         // get the value of the setting we've registered with register_setting()
-        $setting = get_option($name);
+        $setting = get_option($name, $args['default']);
         
         ?>
         <input type="text" name="<?php echo $name; ?>" value="<?php echo isset($setting) ? esc_attr($setting) : ''; ?>">
@@ -148,7 +148,7 @@ abstract class WPMLAutoTranslatorAdminPageBase implements WPMLAutoTranslatorAdmi
         $name = $args['name'];
         
         // get the value of the setting we've registered with register_setting()
-        $setting = get_option($name, true);
+        $setting = get_option($name, $args['default']);
         ?>
         <input type="checkbox" name="<?php echo $name; ?>" value="<?php echo $args['value']; ?>" <?php if ($setting) echo ' checked '; ?>>
         <?php

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Class that manage the full translation (doTranslation).
+ * It also handle ajax request (doTranslationAjax) and show status.
+ */
 class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBase {
 
     /**
@@ -110,6 +114,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     
     /**
      * Do the translation process (it will do "paginated" auto refreshing)
+     * Load all posts that match with the configuration and call to WPMLAutoTranslator::translateItem
      */
     private function doTranslation() {
         if (!WPMLAutoTranslator::wpml_available()) {
@@ -134,6 +139,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                     $translated = WPMLAutoTranslator::translateItem(array(
                         'element_id' => $post->ID,
                         'lang' => $lang,
+                        'translation_complete' => $this->settings['translation_complete'],
                     ));
                     // if ($translated) echo 'To: ' , $lang,'<br />';
                 }
@@ -164,13 +170,13 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     
     /**
      * Load the required data for elements (like languages)
-     * @param type $param
      */
-    public function load_options_data($param) {
+    public function load_options_data() {
         $this->settings['max_step'] = get_option( 'wpmlat_max_translations_step', 50 );
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
         $this->settings['string_translator'] = ( true == get_option( 'wpmlat_use_string_translator' ) );
+        $this->settings['translation_complete'] = get_option( 'wpmlat_set_as_translated' );
         // $this->settings['translation_service'] = get_option( 'wpmlat_translation_service' );
         $this->settings['current_page'] = intval( $_GET['datapage'] ); // get_query_var( 'datapage', null );
     }
