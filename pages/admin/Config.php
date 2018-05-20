@@ -34,7 +34,7 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
      * Load the required data for elements (like languages)
      * @param type $param
      */
-    public function load_options_data($param) {
+    public function load_options_data() {
         $this->elements['languages'] = WPMLAutoTranslator::get_active_languages_short();
         $this->elements['posts_types'] = get_post_types();        
         $this->elements['translation_services'] = WPMLAutoTranslator::get_translation_services();

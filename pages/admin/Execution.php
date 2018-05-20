@@ -157,9 +157,8 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     
     /**
      * Load the required data for elements (like languages)
-     * @param type $param
      */
-    public function load_options_data($param) {
+    public function load_options_data() {
         $this->settings['max_step'] = get_option( 'wpmlat_max_translations_step', 50 );
         $this->settings['languages'] = get_option( 'wpmlat_languages' );
         $this->settings['post_types'] = get_option( 'wpmlat_post_types' );
