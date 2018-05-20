@@ -2,7 +2,7 @@
 
 ## Important
 
-This is NOT a ```WPML Translation Service```, is a Translation Service for ```WPML Auto Translator``` (independent plugin)
+This is NOT a ```WPML Translation Service```, is a Translation Service for ```Auto Translator for WPML``` (independent plugin)
 
 ## Translation service
 
@@ -17,5 +17,5 @@ It's recommended to add external files (external files or extra functionalities)
 
 *Is required that translation service have their own directory and subfile even only require one file*
 
-After that, you can choose the TranslationService from ```Settings -> WPML Auto Translator``` in ```wp-admin``` dashboard
+After that, you can choose the TranslationService from ```Settings -> Auto Translator for WPML``` in ```wp-admin``` dashboard
 (it will appear automatically). 

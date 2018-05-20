@@ -1,4 +1,4 @@
-=== WPML Auto Translator ===
+=== Auto Translator for WPML ===
 Contributors: ProtocolNebula
 Tags: wpml, translation, google, automatic, elementor
 Requires at least: 4.9
