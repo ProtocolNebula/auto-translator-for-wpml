@@ -11,15 +11,16 @@
             __( 'You can\'t use this plugin until WPML is configured.', 'wpmlat' ),
         '</p>';
     } else {
-        if ( '' != $result_execution and !$refresh ) {
-            echo '<div class="wpmlat_autorefresh" >',$result_execution,'</div>';
+        echo '<div id="wpmlat_execution_content">';
+        if ( '' != $result_execution ) {
+            echo $result_execution;
         }
+        echo '</div>';
         
         if ( $refresh ) {
+            echo '<img class="spinner-wpmlat" src="',plugins_url( '/public/img/spinner.gif', WPMLAT__PLUGIN_DIR_PUBLIC ),'">';
             echo '<noscript><meta class="wpmlat_autorefresh" http-equiv="refresh" content="5; url=' , $next_url , '"></noscript>';
-            echo '<div id="wpmlat_execution_content">Refreshing... <a href="' , $next_url , '">Click here if this process freeze.</a></div>';
-            
-            echo '<img src="',plugins_url( '/public/img/spinner.gif', WPMLAT__PLUGIN_DIR_PUBLIC ),'">';
+            echo '<p class="wpmlat_autorefresh">Refreshing... <a href="' , $next_url , '">Click here if this process freeze.</a></p>';
         } elseif ( $finished ) {
             if ( $total_posts > 0 ) {
                 _e( 'All items translated', 'wpmlat' );

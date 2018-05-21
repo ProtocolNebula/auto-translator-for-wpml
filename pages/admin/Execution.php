@@ -55,11 +55,15 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
             $use_translation_management = ( true == get_option( 'wpmlat_use_translation_management' ) );
             
             $result_execution = '';
+            $total_posts = 0;
             if ( $this->settings['current_page'] > 0 ) {
                 ob_start();
                     $total_posts = $this->doTranslation();
                     $result_execution = ob_get_contents();
                 ob_end_clean();
+            } else if (boolval($_GET['finish']) ) {
+                $this->finished = true;
+                $total_posts = 1; // Avoid error message
             }
             
             // View file
@@ -101,7 +105,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         if ($this->finished) {
             // Force for generate get
             $this->next_page = $this->settings['current_page'];
-            $data['next_url'] = WPMLAT_EXECUTION_URL; // Return to main scren
+            $data['next_url'] = WPMLAT_EXECUTION_URL . '&finish=true'; // Return to main scren
         } else {
             $data['next_url'] = $this->prepareNextUrl(); // Next url
         }

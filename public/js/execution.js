@@ -9,10 +9,11 @@ jQuery(document).ready(function ($) {
     'max_step': parseInt(ajax_object.max_step),
   };
   
+  $(".wpmlat_autorefresh").remove();
   var container_process = $("#wpmlat_execution_content"),
     nextTimeout = 1; // Timeout for errors (in seconds)
   
-  update_process_data();
+  update_process_data(container_process.html());
   process_next_page(data.datapage + 1);
   
   function process_next_page( page ) {
@@ -37,6 +38,9 @@ jQuery(document).ready(function ($) {
             // Show process to the user
             update_process_data( response.result_execution );
           } else if ( response.finished ) {
+            // $(".spinner-wpmlat").remove();
+            // update_process_data( response.result_execution + "<br />No translations left." );
+            
             // Redirect to finish page
             window.location.replace ( response.next_url );
           } else {
@@ -58,8 +62,7 @@ jQuery(document).ready(function ($) {
    */
   function update_process_data( response ) {
     if ( response === undefined ) response = '';
-    container_process.html( 'Updating with ajax...<br />' +
-      'Page: ' + data.current_page.toString() + '<br />' +
+    container_process.html( 'Page: ' + data.current_page.toString() + '<br />' +
       'Elements processed: ' + (data.current_page * data.max_step).toString() + '<br />' +
       'Last response:<br />' + response
     );
