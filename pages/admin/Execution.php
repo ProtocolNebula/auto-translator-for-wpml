@@ -118,6 +118,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         
         $langs = $this->settings['languages'];
         
+        // Change the language to the default language
+        $defaultLang = apply_filters('wpml_default_language', NULL );
+        do_action( 'wpml_switch_language', $defaultLang );
+        
         // Get all posts to check
         $elements = new WP_Query(array(
             'post_type' => $this->settings['post_types'],
