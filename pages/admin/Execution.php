@@ -50,12 +50,20 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         );
         
         if (current_user_can('manage_options')) {
+            $can_do_translation = WPMLAutoTranslator::wpml_full_configured();
+            
+            $use_translation_management = ( true == get_option( 'wpmlat_use_translation_management' ) );
+            
             $result_execution = '';
+            $total_posts = 0;
             if ( $this->settings['current_page'] > 0 ) {
                 ob_start();
-                    $this->doTranslation();
+                    $total_posts = $this->doTranslation();
                     $result_execution = ob_get_contents();
                 ob_end_clean();
+            } else if (boolval($_GET['finish']) ) {
+                $this->finished = true;
+                $total_posts = 1; // Avoid error message
             }
             
             // View file
@@ -63,9 +71,11 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                 'settings' => $this->settings,
                 'refresh' => $this->refresh,
                 'finished' => $this->finished,
+                'total_posts' => $total_posts,
                 'next_page' => $this->next_page,
                 'next_url' => $this->prepareNextUrl(),
                 'result_execution' => $result_execution,
+                'can_do_translation' => $can_do_translation,
             ));
         }
     }
@@ -79,7 +89,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['current_page'] = $_GET['datapage'];
         
         ob_start();
-            $this->doTranslation();
+            $total_posts = $this->doTranslation();
             $result = ob_get_contents();
         ob_end_clean();
         
@@ -89,12 +99,13 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
             'next_page' => $this->next_page,
             'result_execution' => $result,
             'next_url' => '',
+            'total_posts' => $total_posts,
         );
         
         if ($this->finished) {
             // Force for generate get
             $this->next_page = $this->settings['current_page'];
-            $data['next_url'] = WPMLAT_EXECUTION_URL; // Return to main scren
+            $data['next_url'] = WPMLAT_EXECUTION_URL . '&finish=true'; // Return to main scren
         } else {
             $data['next_url'] = $this->prepareNextUrl(); // Next url
         }
@@ -108,6 +119,8 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     /**
      * Do the translation process (it will do "paginated" auto refreshing)
      * Load all posts that match with the configuration and call to WPMLAutoTranslator::translateItem
+     * IMPORTANT: This function only will load the current admin language
+     * @return int Posts found
      */
     private function doTranslation() {
         if (!WPMLAutoTranslator::wpml_available()) {
@@ -146,7 +159,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
             $this->refresh = true;
         } else {
             $this->finished = true;
+            $this->refresh = false;
         }
+        
+        return $elements->post_count;
     }
     
     /**

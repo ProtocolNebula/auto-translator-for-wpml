@@ -17,6 +17,9 @@ class WPMLAutoTranslatorAdminConfigPage extends WPMLAutoTranslatorAdminPageBase 
         $this->add_setting_select('wpmlat_post_types', $this->elements['posts_types'], __('Translate element types', 'wpmlat'), true);
         $this->add_setting_select('wpmlat_translation_service', $this->elements['translation_services'], __('Translate element types', 'wpmlat'), false);
         $this->add_setting_checkbox('wpmlat_set_as_translated', true, __('Check elements as translated (only for new translated elements) - BE CAREFUL WITH THIS', 'wpmlat'), false);
+        
+        // TODO: remove this on final merge with support_no_stringtranslator
+        update_option( 'wpmlat_use_translation_management', true );
     }
 
     public function show_page() {

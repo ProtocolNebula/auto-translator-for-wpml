@@ -2,6 +2,7 @@
 // Main url to sections
 const WPMLAT_SETTINGS_URL = 'options-general.php?page=wpmlat_config';
 const WPMLAT_EXECUTION_URL = 'admin.php?page=wpmlat_execution';
+const WPML_REFERRAL_URL = 'https://wpml.org/?aid=188550&affiliate_key=ZNyQ9dyyFFii&dr=wpmlat-referral';
 
 class WPMLAutoTranslatorAdmin {
 
@@ -33,13 +34,23 @@ class WPMLAutoTranslatorAdmin {
     }
     
     public static function admin_notices () {
-        if (!WPMLAutoTranslator::wpml_available()) {
+        $use_translation_management = get_option( 'wpmlat_use_translation_management', false );
+        if ( ! WPMLAutoTranslator::wpml_available() ) {
             self::print_admin_notices( 
-                __('WPML Not found for WPMLAT.', 'wpmlat'), 
-                sprintf ( __( 'Please, install WPML and WPML Translation Management, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), 'https://wpml.org/?aid=188550&affiliate_key=ZNyQ9dyyFFii&dr=wpmlat-referral' ), 
+                __('WPML dependencens missing for WPMLAT.', 'wpmlat'), 
+                sprintf ( __( 'Please, install <b>WPML</b>, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), WPML_REFERRAL_URL ), 
                 'error' 
             );
         }
+        
+        if ( $use_translation_management && ! WPMLAutoTranslator::wpml_full_configured() ) {
+            self::print_admin_notices( 
+                __('WPML dependencens missing for WPMLAT.', 'wpmlat'), 
+                sprintf ( __( 'Please, install <b>WPML Translation Management</b> and <b>WPML String Translation</b> extension, you <a href="%s" target="_blank">can obtain it here</a> or disable it in <a href="%s">Settings</a>.', 'wpmlat' ), WPML_REFERRAL_URL, WPMLAT_SETTINGS_URL ), 
+                'error' 
+            );
+        }
+        
     }
     
     /**

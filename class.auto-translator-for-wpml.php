@@ -72,11 +72,73 @@ class WPMLAutoTranslator {
     }
     
     /**
+     * Return the available plugins for wpml
+     * @staticvar type $plugins
+     * @return type
+     */
+    public static function wpml_plugins_active() {
+        static $plugins = null;
+
+        if ( class_exists('SitePress') and null === $plugins ) {
+            $plugins = SitePress::get_installed_plugins();
+        }
+        
+        return $plugins;
+    }
+    
+    /**
      * Check if wpml is available
      * @return type
      */
     public static function wpml_available () {
-        return class_exists('TranslationManagement') and function_exists('wpml_tm_load_job_factory');
+        return function_exists('icl_object_id');
+    }
+    
+    /**
+     * Check if WPML Translation Management is active
+     * NOTE: If you only need to know if WPML is enabled, use wpml_available() instead.
+     * NOTE 2: What you maybe need is: wpml_full_configured()
+     * @return bool
+     */
+    public static function wpml_translation_management_active() {
+        $wpml_plugins_list = self::wpml_plugins_active();
+        if ( !$wpml_plugins_list ) {
+            // or !class_exists('TranslationManagement') and !function_exists('wpml_tm_load_job_factory')
+            return false;
+        }
+        
+        return is_plugin_active( $wpml_plugins_list['WPML Translation Management']['file'] );
+        // return ( true === $wpml_plugins_list['WPML Translation Management']['active'] );
+    }
+    
+    /**
+     * Check if WPML String Translation is active
+     * NOTE: If you only need to know if WPML is enabled, use wpml_available() instead.
+     * NOTE 2: What you maybe need is: wpml_full_configured()
+     * @return bool
+     */
+    public static function wpml_string_translation_active() {
+        $wpml_plugins_list = self::wpml_plugins_active();
+        
+        if ( !$wpml_plugins_list ) {
+            return false;
+        }
+        
+        return is_plugin_active( $wpml_plugins_list['WPML String Translation']['file'] );
+        // return ( true === $wpml_plugins_list['WPML String Translation']['active'] );
+    }
+    
+    /**
+     * Check if all WPML needed features are active
+     */
+    public static function wpml_full_configured() {
+        $use_translation_management = get_option( 'wpmlat_use_translation_management', false );
+        
+        if ($use_translation_management) {
+            return self::wpml_available() && self::wpml_translation_management_active() && self::wpml_string_translation_active();
+        }
+        
+        return self::wpml_available();
     }
     
     /**
@@ -152,12 +214,41 @@ class WPMLAutoTranslator {
      *      It can return false if all is translated or destination language is the same
      */
     public static function translateItem($args = array()) {
+        static $use_translation_management = null;
+        if ( null === $use_translation_management ) {
+            $use_translation_management = ( true == get_option( 'wpmlat_use_translation_management' ) );
+        }
+        
         if (!isset($args['element_id'])) {
             throw new Exception(__('No element_id specified to auto translate'));
         }
         if (!isset($args['lang'])) {
             throw new Exception(__('No destination lang specified to auto translate'));
         }
+        
+        if ($use_translation_management) {
+            self::translateItemWithTranslationManagement($args);
+        } else {
+            self::translateItemRaw($args);
+        }
+    }
+    
+    /**
+     * Make a translation without use WPML Translation Management or similar
+     * @param array $args Check self::translateItem
+     * @return boolean
+     */
+    private static function translateItemRaw($args) {
+        throw new Exception(__('Translation without Translation Management in progress'));
+    }
+    
+    
+    /**
+     * Make a translation using WPML Translation Management
+     * @param array $args Check self::translateItem
+     * @return boolean
+     */
+    private static function translateItemWithTranslationManagement($args) {
         
         // Get the page/post to translate
         $tm = new TranslationManagement(); // WPML Translation Manager, NOT WPMLA
