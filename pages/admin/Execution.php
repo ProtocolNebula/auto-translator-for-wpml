@@ -50,20 +50,16 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         );
         
         if (current_user_can('manage_options')) {
-            $can_do_translation = true;
+            $can_do_translation = WPMLAutoTranslator::wpml_full_configured();
             
             $use_translation_management = ( true == get_option( 'wpmlat_use_translation_management' ) );
             
             $result_execution = '';
             if ( $this->settings['current_page'] > 0 ) {
                 ob_start();
-                    $this->doTranslation();
+                    $total_posts = $this->doTranslation();
                     $result_execution = ob_get_contents();
                 ob_end_clean();
-            } else if ( $use_translation_management ) {
-                // Will avoid this on every translation step because require a lot of time
-                // Basically this check if the string_stranslator is enabled
-                $can_do_translation = WPMLAutoTranslator::wpml_translation_management_active();
             }
             
             // View file
@@ -71,6 +67,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
                 'settings' => $this->settings,
                 'refresh' => $this->refresh,
                 'finished' => $this->finished,
+                'total_posts' => $total_posts,
                 'next_page' => $this->next_page,
                 'next_url' => $this->prepareNextUrl(),
                 'result_execution' => $result_execution,
@@ -88,7 +85,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
         $this->settings['current_page'] = $_GET['datapage'];
         
         ob_start();
-            $this->doTranslation();
+            $total_posts = $this->doTranslation();
             $result = ob_get_contents();
         ob_end_clean();
         
@@ -98,6 +95,7 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
             'next_page' => $this->next_page,
             'result_execution' => $result,
             'next_url' => '',
+            'total_posts' => $total_posts,
         );
         
         if ($this->finished) {
@@ -117,6 +115,8 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
     /**
      * Do the translation process (it will do "paginated" auto refreshing)
      * Load all posts that match with the configuration and call to WPMLAutoTranslator::translateItem
+     * IMPORTANT: This function only will load the current admin language
+     * @return int Posts found
      */
     private function doTranslation() {
         if (!WPMLAutoTranslator::wpml_available()) {
@@ -151,7 +151,10 @@ class WPMLAutoTranslatorAdminExecutionPage extends WPMLAutoTranslatorAdminPageBa
             $this->refresh = true;
         } else {
             $this->finished = true;
+            $this->refresh = false;
         }
+        
+        return $elements->post_count;
     }
     
     /**

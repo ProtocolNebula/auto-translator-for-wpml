@@ -18,8 +18,14 @@
         if ( $refresh ) {
             echo '<noscript><meta class="wpmlat_autorefresh" http-equiv="refresh" content="5; url=' , $next_url , '"></noscript>';
             echo '<div id="wpmlat_execution_content">Refreshing... <a href="' , $next_url , '">Click here if this process freeze.</a></div>';
+            
+            echo '<img src="',plugins_url( '/public/img/spinner.gif', WPMLAT__PLUGIN_DIR_PUBLIC ),'">';
         } elseif ( $finished ) {
-            _e( 'All items translated', 'wpmlat' );
+            if ( $total_posts > 0 ) {
+                _e( 'All items translated', 'wpmlat' );
+            } else {
+                _e( 'No posts founds. Please, check your current language (in admin bar top). It must be your main language.', 'wpmlat' );
+            }
         } else {
             echo '<p>',
                 __( 'The translation process might take a long time, be sure to not close this page.', 'wpmlat' ),

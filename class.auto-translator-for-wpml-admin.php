@@ -37,16 +37,16 @@ class WPMLAutoTranslatorAdmin {
         $use_translation_management = get_option( 'wpmlat_use_translation_management', false );
         if ( ! WPMLAutoTranslator::wpml_available() ) {
             self::print_admin_notices( 
-                __('WPML Not found for WPMLAT.', 'wpmlat'), 
+                __('WPML dependencens missing for WPMLAT.', 'wpmlat'), 
                 sprintf ( __( 'Please, install <b>WPML</b>, if you do not haven it yet, you <a href="%s" target="_blank">can obtain it here</a>.', 'wpmlat' ), WPML_REFERRAL_URL ), 
                 'error' 
             );
         }
         
-        if ( $use_translation_management && ! WPMLAutoTranslator::wpml_translation_management_active() ) {
+        if ( $use_translation_management && ! WPMLAutoTranslator::wpml_full_configured() ) {
             self::print_admin_notices( 
-                __('WPML Not found for WPMLAT.', 'wpmlat'), 
-                sprintf ( __( 'Please, install <b>WPML Translation Management</b> extension, you <a href="%s" target="_blank">can obtain it here</a> or disable it in <a href="%s">Settings</a>.', 'wpmlat' ), WPML_REFERRAL_URL, WPMLAT_SETTINGS_URL ), 
+                __('WPML dependencens missing for WPMLAT.', 'wpmlat'), 
+                sprintf ( __( 'Please, install <b>WPML Translation Management</b> and <b>WPML String Translation</b> extension, you <a href="%s" target="_blank">can obtain it here</a> or disable it in <a href="%s">Settings</a>.', 'wpmlat' ), WPML_REFERRAL_URL, WPMLAT_SETTINGS_URL ), 
                 'error' 
             );
         }
