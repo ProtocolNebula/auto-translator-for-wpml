@@ -188,6 +188,9 @@ class WPMLAutoTranslator {
 
         // Nothing to translate?
         if ('' == $sourceLang or $sourceLang == $destLang) return false;
+        
+        $fieldsTranslated = 0;
+        
         // Check all items of that element (for elementor or other composers)
         foreach ($res->elements as $k => $element) {
             if (!$element->field_data_translated and $element->field_data) {
@@ -207,12 +210,18 @@ class WPMLAutoTranslator {
                         'format' => 'base64',
                         'finished' => $args[ 'translation_complete' ] ? true : false,
                     );
+                    
+                    $fieldsTranslated++;
                 }
             }
         }
 
         // Something has changed
-        if (!empty($toSave)) {
+        if ( $fieldsTranslated > 0 ) {
+            if ( $args[ 'translation_complete' ] ) {
+                $toSave['complete'] = true; // Force check to complete (only will work if all fields are finished)
+            }
+            
             // More information in: 
             // wpml-translation-management\inc\ajax.php
             // wpml-translation-management\inc\translation-jobs\helpers\wpml-save-translation-data-action.class.php
