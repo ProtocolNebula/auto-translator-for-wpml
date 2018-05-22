@@ -9,6 +9,8 @@ Domain: wpmlat
 Auto translate your web using google translator and WPML.org plugin.
 
 == Description ==
+**Main repository:** https://github.com/ProtocolNebula/auto-translator-for-wpml
+
 This plugin let you translate all content of your Wordpress using google translator.
 In the future is planned to add more services and configurations like bing.
 
