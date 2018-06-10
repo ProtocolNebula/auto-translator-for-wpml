@@ -1,5 +1,6 @@
 === Auto Translator for WPML ===
 Contributors: ProtocolNebula
+Donate link: https://paypal.me/RubenArroyoCeruelo
 Tags: wpml, translation, google, automatic, elementor
 Requires at least: 4.9
 Requires PHP: 5.6
@@ -9,6 +10,13 @@ Domain: wpmlat
 Auto translate your web using google translator and WPML.org plugin.
 
 == Description ==
+=== IMPORTANT ===
+This version is under development. You can follow more information about it in the main [GitHub Repository](https://github.com/ProtocolNebula/auto-translator-for-wpml).
+
+WPML 4 will be released soon, so I will wait until final release will launched to change plugin version to stable.
+
+=== About ===
+
 This plugin let you translate all content of your Wordpress using google translator.
 In the future is planned to add more services and configurations like bing.
 
@@ -27,3 +35,8 @@ parameters here as you wish.
 == Using the plugin
 Under **WPML** menu (you need WPML installed) you can choose "Do Auto Translation",
 in this page you can execute the auto translation process.
+
+== Changelog == 
+
+v0.9
+Initial release.
