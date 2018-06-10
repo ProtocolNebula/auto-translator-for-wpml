@@ -1,6 +1,11 @@
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
     <h2><?php _e( 'Execute auto translation', 'wpmlat' ); ?></h2>
+    
+    <div style="color: #ff0000;">
+        <p>This is a beta version. Please, check <a href="https://github.com/ProtocolNebula/auto-translator-for-wpml/issues" target="_blank">issues</a> before do a translation.</p>
+        <p>A backup is recommended before do translation</p>
+    </div>
     <?php
     //print_r($settings);
 
