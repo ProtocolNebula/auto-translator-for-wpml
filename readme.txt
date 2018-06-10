@@ -16,6 +16,7 @@ This version is under development. You can follow more information about it in t
 WPML 4 will be released soon, so I will wait until final release will launched to change plugin version to stable.
 
 === About ===
+**Main repository:** https://github.com/ProtocolNebula/auto-translator-for-wpml
 
 This plugin let you translate all content of your Wordpress using google translator.
 In the future is planned to add more services and configurations like bing.
