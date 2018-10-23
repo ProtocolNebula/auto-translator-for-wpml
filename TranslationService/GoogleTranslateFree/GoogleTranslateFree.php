@@ -5,7 +5,7 @@ require_once __DIR__ . '/lib/GoogleTranslate.php';
 
 use \Statickidz\GoogleTranslate;
 
-class GoogleTranslateFree implements TranslationService {
+class GoogleTranslateFree extends TranslationService {
     
     private static $googleService = null;
     
@@ -13,11 +13,20 @@ class GoogleTranslateFree implements TranslationService {
         if (self::$googleService === null) {
             self::$googleService = new GoogleTranslate();
         }
+        $this->initHelper();
     }
     
     public function translate($text, $sourceLanguage, $destinationLanguage) {
-        usleep(6000); // Wait 6 miliseconds between each petition
-        return self::$googleService->translate($sourceLanguage, $destinationLanguage, $text);
+        // Wait until next request
+        $this->helper->waitUntilNextRequest();
+        
+        // Get translation
+        $result = self::$googleService->translate($sourceLanguage, $destinationLanguage, $text);
+        
+        // Update last query time
+        $this->helper->updateLastQueryTime();
+        
+        return $result;
     }
 
     public function globalConfiguration() {

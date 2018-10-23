@@ -1,39 +1,25 @@
 <?php
 namespace racs\wpmlat\TranslationService;
 
-/**
- * This interface defines how must be all TranslationService.
- * This file is include in "auto-translator-for-wpml.php"
- */
-interface TranslationService {
-    
-    /**
-     * This function may be load (if is necessary) the original class
-     * to use (if there any)
-     */
-    public function init();
+require __DIR__ . '/TranslationServiceI.php';
+require __DIR__ . '/TranslationServiceHelpers.php';
 
-    /**
-     * Make a translation with the service
-     * NOTE: Depending of Translation Service, $sourceLanguage will be autodetected 
-     * even if specified (ex: google)
-     * @param string $text Text to translate
-     * @param string $sourceLanguage Original Language
-     * @param string $destinationLanguage New Language
-     * @return string Text translation
-     */
-    public function translate($text, $sourceLanguage, $destinationLanguage);
+/**
+ * This class provide the base functionallity to create a TranslationService.
+ * This will force to use the required interface and will help to load Helpers
+ * This file is loaded in "auto-translator-for-wpml.php"
+ */
+class TranslationService implements TranslationServiceI {
+    
+    protected $helper;
     
     /**
-     * FOR FUTURE IMPLEMENTS:
-     * This function show a form with all required data for this specific TranslationService (if is necessary)
+     * This metod will init the helper in $this->helper;
      */
-    public function globalConfiguration();
-    
-    /**
-     * FOR FUTURE IMPLEMENTS:
-     * This function save data from globalConfiguration() with all required data for this specific TranslationService (if is necessary)
-     */
-    public function saveGlobalConfiguration();
+    protected function initHelper() {
+        if ( ! $this->helper ) {
+            $this->helper = new TranslationServiceHelpers();
+        }
+    }
     
 }
